@@ -1,0 +1,52 @@
+﻿@model LoginViewModel
+
+<h1>Login</h1>
+<hr />
+<br />
+
+@{
+    string error = ViewData["NotUserFound"]?.ToString() ;
+}
+
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>@error</strong> 
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<form asp-action="Login" class="border p-4 rounded">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="row">
+        <label asp-for="UserName" class="form-label"></label>
+        <input asp-for="UserName" class="form-control" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+    <br />
+
+    <div class="row">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <br />
+
+    <div class="form-check">
+        <label asp-for="IsRememberMe" class="form-check-label"></label>
+        <input asp-for="IsRememberMe" class="form-check-input" />
+    </div>
+    <br />
+
+    <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+
+    <input type="submit" class="btn btn-outline-info" value="Login" />
+</form>
+
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

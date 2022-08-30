@@ -1,3 +1,5 @@
+using Application.ContextInterfaces;
+using Infrastructure.AddIdentityDatabaseToIservice;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Contexts;
 
@@ -7,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<DatabaseContext>(option => option.UseSqlServer(builder.Configuration["ConnectionStrings:SqlServer"]));
+builder.Services.AddMyIdentityService(builder.Configuration);
+
+builder.Services.AddTransient<IDatabaseContext, DatabaseContext>();
 
 var app = builder.Build();
 
@@ -23,6 +28,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
