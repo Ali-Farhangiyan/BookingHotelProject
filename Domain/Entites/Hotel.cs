@@ -29,6 +29,9 @@ namespace Domain.Entites
         private readonly List<Image> images = new List<Image>();
         public ICollection<Image> Images => images.AsReadOnly();
 
+        private readonly List<HotelFeature> hotelFeatures = new List<HotelFeature>();
+        public ICollection<HotelFeature> HotelFeatures => hotelFeatures.AsReadOnly();
+
         public Hotel()
         {
             // ef core
@@ -69,6 +72,17 @@ namespace Domain.Entites
             images.AddRange(listOfImages);
         }
 
-        
+        public void AddHotelFeatures(ICollection<HotelFeature> listOfHotelFeatures)
+        {
+            hotelFeatures.AddRange(listOfHotelFeatures);
+        }
+
+        public void AddHotelFeatures(HotelFeature hotelFeature)
+        {
+            hotelFeatures.Add(hotelFeature);
+        }
+
+
+
     }
 }

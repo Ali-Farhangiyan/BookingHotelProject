@@ -86,6 +86,32 @@ namespace Persistence.Migrations
                     b.ToTable("Hotels");
                 });
 
+            modelBuilder.Entity("Domain.Entites.HotelFeature", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("HotelId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HotelId");
+
+                    b.ToTable("HotelFeatures");
+                });
+
             modelBuilder.Entity("Domain.Entites.Image", b =>
                 {
                     b.Property<int>("Id")
@@ -179,6 +205,17 @@ namespace Persistence.Migrations
                     b.Navigation("Room");
                 });
 
+            modelBuilder.Entity("Domain.Entites.HotelFeature", b =>
+                {
+                    b.HasOne("Domain.Entites.Hotel", "Hotel")
+                        .WithMany("HotelFeatures")
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hotel");
+                });
+
             modelBuilder.Entity("Domain.Entites.Image", b =>
                 {
                     b.HasOne("Domain.Entites.Hotel", "Hotel")
@@ -214,6 +251,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entites.Hotel", b =>
                 {
+                    b.Navigation("HotelFeatures");
+
                     b.Navigation("Images");
 
                     b.Navigation("Rooms");

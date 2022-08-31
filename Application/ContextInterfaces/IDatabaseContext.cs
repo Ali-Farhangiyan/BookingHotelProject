@@ -15,6 +15,7 @@ namespace Application.ContextInterfaces
         DbSet<Image> Images { get; set; }
         DbSet<Booking> Bookings { get; set; }
         DbSet<RoomFeature> RoomFeatures { get; set; }
+        DbSet<HotelFeature> HotelFeatures { get; set; }
 
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

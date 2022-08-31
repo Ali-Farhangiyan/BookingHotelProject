@@ -1,5 +1,6 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using StaticFiles.Attributes;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 
 namespace StaticFiles.Controllers
@@ -8,14 +9,15 @@ namespace StaticFiles.Controllers
     [ApiController]
     public class ApiImageUploaderController : ControllerBase
     {
-        private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment env;
+        private readonly IHostingEnvironment env;
 
-        public ApiImageUploaderController(Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
+        public ApiImageUploaderController(IHostingEnvironment env)
         {
             this.env = env;
         }
 
         [HttpPost]
+        [DisableFormValueModelBinding]
         public async Task<IActionResult> Post()
         {
             var files = Request.Form.Files;

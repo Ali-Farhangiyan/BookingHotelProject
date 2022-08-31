@@ -53,10 +53,10 @@ namespace Infrastructure.ImageServices
                     bytes = ms.ToArray();
                 }
 
-                request.AddFile(file.FileName, bytes, file.FileName);
+                request.AddFile(file.FileName, bytes, file.FileName,file.ContentType);
             }
 
-            var response = await restClient.ExecuteAsync(request);
+            var response = await restClient.ExecutePostAsync(request);
 
             if (response.Content is null) return null!;
 
@@ -75,6 +75,6 @@ namespace Infrastructure.ImageServices
 
     public class ImageAddress
     {
-        public List<string> Sources { get; set; } = null!;
+        public List<string> Sources { get; set; } = new List<string>();
     }
 }

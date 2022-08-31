@@ -1,4 +1,5 @@
 using Application.ContextInterfaces;
+using Application.Services.AdminHotelServices.FacadeAdminHotelService;
 using Infrastructure.AddIdentityDatabaseToIservice;
 using Infrastructure.ImageServices;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ builder.Services.AddMyIdentityService(builder.Configuration);
 
 builder.Services.AddTransient<IDatabaseContext, DatabaseContext>();
 builder.Services.AddTransient<IImageServices, ImageService>();
+builder.Services.AddTransient<IAdminHotelService, AdminHotelService>();
 
 
 var app = builder.Build();

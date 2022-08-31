@@ -7,23 +7,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{F16550F6-4ED
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{F79445BF-485C-49AE-ACFC-810BEBEC6A4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{C5A9DC72-0104-4D98-8233-F315DAFAF4A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{C5A9DC72-0104-4D98-8233-F315DAFAF4A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{50CC8A30-FA3E-4A35-A39B-9118BC83FB5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{50CC8A30-FA3E-4A35-A39B-9118BC83FB5D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructures", "Infrastructures", "{29E4C0E1-0819-4652-B780-0A593B167B2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{699942A1-4732-4CE0-9FE3-8558AA05E528}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{699942A1-4732-4CE0-9FE3-8558AA05E528}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "Persistence\Persistence.csproj", "{4D45F91F-820E-490B-84C2-F85050C858B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\Persistence.csproj", "{4D45F91F-820E-490B-84C2-F85050C858B1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persentations", "Persentations", "{CC8541CE-183F-4B97-BB1C-F7E16F8975CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingHotelUI", "BookingHotelUI\BookingHotelUI.csproj", "{D6873571-43B4-441D-98A2-A67C6D73BE30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingHotelUI", "BookingHotelUI\BookingHotelUI.csproj", "{D6873571-43B4-441D-98A2-A67C6D73BE30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Admin", "Admin\Admin.csproj", "{D38B6AB8-C141-4927-9F0D-DF9CDC3046B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Admin", "Admin\Admin.csproj", "{D38B6AB8-C141-4927-9F0D-DF9CDC3046B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticFiles", "StaticFiles\StaticFiles.csproj", "{67F62B37-B0A1-4C87-B8DF-D4C622F2762B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StaticFiles", "StaticFiles\StaticFiles.csproj", "{67F62B37-B0A1-4C87-B8DF-D4C622F2762B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

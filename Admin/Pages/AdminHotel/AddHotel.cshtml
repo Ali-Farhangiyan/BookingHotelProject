@@ -1,0 +1,313 @@
+﻿@page
+@model Admin.Pages.AdminHotel.AddHotelModel
+@{
+}
+
+<h1>Add New Hotel</h1><hr /><br /><br />
+
+<form method="post" asp-antiforgery="true" id="form" onsubmit="return SendForm(event)">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <label asp-for="@Model.Data.Name" class="form-label"></label>
+            <input asp-for="@Model.Data.Name" class="form-control" id="name"/>
+            <span asp-validation-for="@Model.Data.Name" class="text-danger"></span>
+        </div>
+
+        <div class="col-sm-4">
+            <label asp-for="@Model.Data.City" class="form-label"></label>
+            <input asp-for="@Model.Data.City" class="form-control" id="city"/>
+            <span asp-validation-for="@Model.Data.City" class="text-danger"></span>
+        </div>
+
+        <div class="col-sm-4">
+            <label asp-for="@Model.Data.NumberOfStar" class="form-label"></label>
+            <select class="form-select" id="numberOfStar">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+
+    </div><hr /><br />
+
+    <div class="row">
+        <label asp-for="@Model.Data.Description" class="form-label"></label>
+        <textarea name="description" asp-for="@Model.Data.Description" class="form-control" id="description"></textarea>
+    </div><br />
+
+    <div class="row">
+        <label asp-for="@Model.Data.Address" class="form-label"></label>
+        <textarea name="address"  asp-for="@Model.Data.Address" class="form-control" id="address"></textarea>
+    </div><br />
+
+    <div class="row">
+        <label asp-for="@Model.Data.Images" class="form-label"></label>
+        <input type="file" multiple accept="*/image" id="images" class="form-control"/>
+    </div>
+
+    <div class="row rounded p-4 border my-3">
+        <div class="d-flex justify-content-around">
+            <h3>Add Rooms</h3>
+            
+        </div>
+        <hr />
+
+        <div class="d-flex justify-content-around mb-4">
+            <input  class="form-control" placeholder="Name" id="nameOfRoom" />
+            <input  class="form-control" placeholder="capacity" id="capactiy" />
+            <input  class="form-control" placeholder="price per night" id="pricePerNight" />
+            <input  class="form-control" placeholder="price for additional person" id="priceAdditionalPerson" />
+            <label class="form-check" for="AbilityAdditionalPerson">Additional Person</label>
+            <input  type="checkbox" class="form-check" id="AbilityAdditionalPerson" />
+            <button  class="btn btn-outline-info btn-sm" id="addRoom" >Add Room</button>
+        </div><br />
+
+        <table class="table table-responsive table-dark table-hover" id="roomTable">
+            <thead>
+                <tr class="fs-6">
+                    <th>Name</th>
+                    <th>Capacity</th>
+                    <th>Price Per Night</th>
+                    <th>Price For Additional Person</th>
+                    <th>Ability Additional Person</th>
+                    <th>Operations</th>
+                </tr>
+            </thead>
+
+            <tbody id="tbodyRoom">
+
+           </tbody>
+        </table>
+    </div>
+
+    <div class="row rounded p-4 border my-3">
+        <div class="d-flex justify-content-around">
+             <h3>Add Hotel Feature</h3>
+            
+        </div>
+        
+        <hr />
+        <div class="d-flex justify-content-around">
+            <input class="form-control" placeholder="Name Feature" id="nameOfFeature" />
+            <input class="form-control" placeholder="Icon" id="icon" />
+            <button class="btn btn-outline-info btn-sm" id="addFeature" >Add Hotel Feature</button>
+        </div><br />
+
+       <table class="table  table-responsive table-dark table-hover" id="featureTable">
+           <thead>
+               <tr>
+                   <th>Name</th>
+                   <th>Icon</th>
+                   <th>Operations</th>
+               </tr>
+           </thead>
+
+           <tbody id="tbodyFeature">
+
+           </tbody>
+       </table>
+    </div>
+
+    <input type="submit" class="btn btn-outline-success form-control" />
+
+</form>
+
+@section Scripts{
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="https://cdn.ckeditor.com/4.19.1/standard/ckeditor.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script>
+
+        CKEDITOR.replace('description', {
+            uiColor: '#9AB8F3',
+            width:'100%',
+            height:'50%'
+        });
+
+        CKEDITOR.replace('address', {
+            uiColor: '#9AB8F3',
+            width:'100%',
+            height:'50%'
+        });
+
+    </script>
+
+    <script>
+
+        // create room table for add rooms to hotels...
+        var addRoom = document.getElementById("addRoom")
+        var nameOfRoom = document.getElementById("nameOfRoom")
+        var capacity = document.getElementById("capactiy")
+        var pricePerNight = document.getElementById("pricePerNight")
+        var priceForadditionalPerson = document.getElementById("priceAdditionalPerson")
+        var AbilityAdditionalPerson = document.getElementById("AbilityAdditionalPerson")
+        var tbodyRoom = document.getElementById("tbodyRoom")
+
+        addRoom.addEventListener("click", (e) => {
+            e.preventDefault();
+            let tag = `<tr>
+                            <td>${nameOfRoom.value}</td>
+                            <td>${capacity.value}</td>
+                            <td>${pricePerNight.value}</td>
+                            <td>${priceForadditionalPerson.value}</td>
+                            <td>${AbilityAdditionalPerson.value}</td>
+                            <td><button onclick="deleteRoom(event)" class="btn btn-sm btn-outline-danger">Delete</button></td>
+                       </tr>`;
+            let tr = document.createElement("tr");
+            tr.innerHTML = tag;
+            tbodyRoom.appendChild(tr);
+
+            nameOfRoom.value = ""
+            capacity.value = ""
+            pricePerNight.value = ""
+            priceForadditionalPerson.value = ""
+
+
+        });
+
+        function deleteRoom(event) {
+            let tt = event.target.parentElement.parentElement
+            tt.remove()
+        }
+
+
+        // create table feature for add hotel features...
+        var addFeature = document.getElementById("addFeature")
+        var nameOfFeature = document.getElementById("nameOfFeature")
+        var icon = document.getElementById("icon")
+        var tbodyFeature = document.getElementById("tbodyFeature")
+
+        addFeature.addEventListener("click",(e) => {
+            e.preventDefault();
+            let tag = `<tr>
+                            <td>${nameOfFeature.value}</td>
+                            <td>${icon.value}</td>
+                            <td><button onclick="deleteFeature(event)" class="btn btn-sm btn-outline-danger">Delete</button></td>
+                       </tr>`;
+            let tr = document.createElement("tr");
+            tr.innerHTML = tag;
+            tbodyFeature.appendChild(tr);
+
+            nameOfFeature.value = ""
+            icon.value = ""
+        });
+
+        function deleteFeature(event) {
+            let tt = event.target.parentElement.parentElement
+            tt.remove()
+        }
+
+
+
+        // Send Data from inputs, textareas,... to backend
+        function SendForm(e) {
+
+            e.preventDefault();
+           
+            var form = $("#form");
+
+            // form validation from jQuery(frontend-)
+            form.validate();
+            if (form.valid() == false) {
+                swal({
+                    title:"Inaccuracy of information",
+                    text:"The form information is not entered correctly",
+                    icon:"warning",
+                    button:"Fail"
+                });
+
+                return false;
+            }
+
+
+            var data = new FormData();
+            var roomTable = document.getElementById("roomTable");
+            
+            // get data from room table 
+            for (let i = 1;i < roomTable.rows.length; i++) {
+                let cells = roomTable.rows.item(i).cells;
+                let cc = i - 1;
+                data.append(`Rooms[${cc}].Name`, cells.item(0).innerHTML);
+                data.append(`Rooms[${cc}].Capacity`, cells.item(1).innerHTML);
+                data.append(`Rooms[${cc}].PricePerNight`, cells.item(2).innerHTML);
+                data.append(`Rooms[${cc}].PriceAdditionalPersonPerNight`, cells.item(3).innerHTML);
+            }
+
+            // get data from feature table
+            var featureTable = document.getElementById("featureTable");
+            
+            for (let i = 1; i<featureTable.rows.length; i++) {
+                let cells = featureTable.rows.item(i).cells;
+                let cc = i - 1;
+                data.append(`HotelFeatures[${cc}].Name`, cells.item(0).innerHTML);
+                data.append(`HotelFeatures[${cc}].Icon`, cells.item(1).innerHTML);
+            }
+
+            // get images from input 
+            var images = document.getElementById("images").files;
+            for (let i = 0; i < images.length; i++) {
+                
+                data.append(`images-${i}`, images[i])
+                
+            }
+            
+
+            // for get data from ckeditor
+            var description = CKEDITOR.instances.description.getData();
+            data.append("Description",description)
+
+            var address = CKEDITOR.instances.address.getData();
+            data.append("Address",address)
+
+            var city = document.getElementById("city")
+            data.append("City",city.value)
+
+            var numberOfStar = document.getElementById("numberOfStar")
+            data.append("NumberOfStar",numberOfStar.value)
+
+            var name = document.getElementById("name")
+            data.append("Name",name.value)
+
+
+            // Ajax
+            $.ajax({
+                url : "/adminhotel/addhotel",
+                method: "POST",
+                data:data,
+                contentType:false,
+                processData:false,
+                headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                success: function() {
+                    swal({
+                      title: "Good job!",
+                      text: "Hotel registration was done successfully",
+                      icon: "success",
+                      button:"Done"
+                    }).then(() => {
+                        window.location.href = "/index";
+                    })//end swal
+                },// end success
+                error: function() {
+                    swal({
+                        title:"Not Succesfull",
+                        text:"Hotel registration was fail!",
+                        icon:"warning",
+                        button:"not Successful"
+                    })
+                }// end error
+            })// end ajax
+
+            
+
+        } // end SendForm
+    </script>
+
+
+}
