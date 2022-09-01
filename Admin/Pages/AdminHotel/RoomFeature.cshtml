@@ -1,0 +1,38 @@
+﻿@page
+@model Admin.Pages.AdminHotel.RoomFeatureModel
+@{
+    var hotelId = Request.Query["hotelId"];
+}
+
+<h1> Show Rooms Of <strong><i>@Model.Rooms.FirstOrDefault()?.HotelName</i></strong> Hotel</h1>
+<hr /><br />
+<a asp-page="AddRoom" asp-route-hotelId="@hotelId" class="btn btn-sm btn-outline-primary" title="add room to @Model.Rooms.FirstOrDefault()?.HotelName hotel ">Add Rooms</a>
+@foreach (var room in Model.Rooms)
+{
+    <div class="card my-3">
+        <div class="card-header d-flex justify-content-between">
+            <a asp-page="AddFeature" asp-route-roomId="@room.Id" class="text-decoration-none"><h3 class="card-title">@room.Name</h3></a>
+            <a asp-page="AddFeature" asp-route-roomId="@room.Id" class="align-self-center btn btn-outline-dark btn-sm ">Edit Feature</a>
+            <a asp-page="EditRoom" asp-route-roomId="@room.Id" class="align-self-center btn btn-outline-dark btn-sm ">Edit Room</a>
+            
+        </div>
+
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <p class="card-text">Capacity: <strong>@room.Capacity</strong></p>
+                <p class="card-text">Price: <strong>@room.PricePerNight</strong></p>
+                <p class="card-text">Price Additonal: <strong>@room.PriceAdditionalPersonPerNight</strong></p>
+                <p class="card-text">Ability Additional: <strong>@room.IsAbilityAdditionalPerson</strong></p>
+            </div>
+
+            <h4 class="card-title">Features:</h4>
+            <div class="justify-content-between flex-wrap align-content-between d-flex">
+                
+                @foreach (var feature in room.RoomsFeature)
+                {
+                    <p class="card-text border-bottom">@feature.Icon: <strong>@feature.Name</strong></p>
+                }
+            </div>
+        </div>
+    </div>
+}

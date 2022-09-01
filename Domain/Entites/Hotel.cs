@@ -82,7 +82,15 @@ namespace Domain.Entites
             hotelFeatures.Add(hotelFeature);
         }
 
-
+        public void UpdateHotel(string name, string description, int numberOfStar, string city, string address)
+        {
+            Name = name;
+            Description = description;
+            NumberOfStar = numberOfStar;
+            City = city;
+            Address = address;
+            AddSlug();
+        }
 
     }
 }

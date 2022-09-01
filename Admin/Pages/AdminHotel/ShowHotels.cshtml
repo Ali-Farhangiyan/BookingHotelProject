@@ -1,0 +1,84 @@
+﻿@page "/"
+@model Admin.Pages.AdminHotel.ShowHotelsModel
+@{
+}
+
+<h1>Show Hotels</h1>
+<hr />
+<br />
+<div class="d-flex justify-content-between">
+    <div class="dropdown">
+        <button aria-expanded="false" class="dropdown-toggle btn btn-outline-dark" data-bs-toggle="dropdown">Sorting Hotels </button>
+
+        <div class="dropdown-menu dropdown-menu-dark">
+            <a asp-page="ShowHotels" asp-route-AdminSortingHotel="1" class="dropdown-item">Newest</a>
+            <a asp-page="ShowHotels" asp-route-AdminSortingHotel="2" class="dropdown-item">Oldest</a>
+            <a asp-page="ShowHotels" asp-route-AdminSortingHotel="3" class="dropdown-item">Most Star</a>
+            <a asp-page="ShowHotels" asp-route-AdminSortingHotel="4" class="dropdown-item">Min Star</a>
+        </div>
+    </div>
+
+    <a asp-page="/adminhotel/addhotel" class="btn btn-outline-info">Create New Hotel</a>
+</div>
+
+<br />
+<table class="table table-hover table-striped text-center">
+    <thead>
+        <tr class="table-dark">
+            <th>Name</th>
+            <th>City</th>
+            <th>Number Of Star</th>
+            <th>Number Of Rooms</th>
+            <th>Operations</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var hotel in Model.ShowHotel)
+        {
+            <tr>
+                <td>@hotel.Name</td>
+                <td>@hotel.City</td>
+                <td>@hotel.NumberOfStars</td>
+                <td>@hotel.NumberOfRooms</td>
+                <td>
+                    <a asp-page="EditHotel" asp-route-hotelId="@hotel.Id" class="btn btn-sm btn-outline-dark">Edit Hotel</a>
+                    
+                    <a asp-page="RoomFeature" asp-route-hotelId="@hotel.Id" class="btn btn-sm btn-outline-primary">Edit Rooms</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@{
+    var next = Model.ShowHotel.PageIndex + 1;
+    var prev = Model.ShowHotel.PageIndex - 1;
+
+    var hasNext = Model.ShowHotel.HasNextPage ? "" : "disabled";
+    var hasPrev = Model.ShowHotel.HasPrevPage ? "" : "disabled";
+}
+<nav aria-label="..." class="d-flex justify-content-center">
+
+  <ul class="pagination">
+    <li class="page-item @hasPrev">
+      <a class="page-link" asp-page="ShowHotels" asp-route-pageIndex="@prev">Prev</a>
+    </li>
+
+    @for (var i = 1; i <= @Model.ShowHotel.TotalPage; i++)
+    {
+        if(@Model.ShowHotel.PageIndex == @i)
+        {
+           <li class="page-item active" aria-current="page"><a class="page-link" asp-page="ShowHotels" asp-route-pageIndex="@i">@i</a></li>
+        }
+        else
+        {
+           <li class="page-item"><a class="page-link" asp-page="ShowHotels" asp-route-pageIndex="@i">@i</a></li>
+        }
+    }
+
+    <li class="page-item @hasNext">
+      <a class="page-link" asp-page="ShowHotels" asp-route-pageIndex="@next">Next</a>
+    </li>
+
+  </ul>
+</nav>

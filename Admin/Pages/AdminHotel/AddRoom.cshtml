@@ -1,0 +1,135 @@
+﻿@page
+@model Admin.Pages.AdminHotel.AddRoomModel
+@{
+    var hotelId = Request.Query["hotelId"];
+    ;
+}
+<h1> Add Room To </h1><hr><br />
+
+<form onsubmit="return SendForm(event)" asp-antiforgery="true" id="form" >
+
+    <div class="d-flex flex-wrap justify-content-between align-content-between">
+        <input type="text" class="form-control form-control-sm " placeholder="name" id="name" />
+        <input type="text" class="form-control form-control-sm " placeholder="capacity" id="capacity" />
+        <input type="text" class="form-control form-control-sm " placeholder="price per night" id="pricePerNight" />
+        <input type="text" class="form-control form-control-sm " placeholder="price additional" id="priceAdditional" />
+        <label class="form-check-label" for="abilityAdditional" >Ability Additional Person</label>
+        <input type="checkbox" class="form-check-input" id="abilityAdditional" />
+        <button class="btn btn-sm btn-warning" id="btnAdd">Add Room</button>
+    </div>
+    <br />
+    <table class="table table-hover" id="table">
+        <thead>
+            <tr class="table-dark">
+                <th>Name</th>
+                <th>Capacity</th>
+                <th>PricePerNight</th>
+                <th>PriceAdditional</th>
+                <th>AbilityAdditinalPerosn</th>
+                <th>Operations</th>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+
+        </tbody>
+    </table>
+    <br><br />
+    <input type="submit" class="btn btn-sm btn-success" value="Add Room" />
+</form>
+
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script>
+        var name2 = document.getElementById("name");
+        var capacity = document.getElementById("capacity");
+        var pricePerNight = document.getElementById("pricePerNight");
+        var priceAdditional = document.getElementById("priceAdditional");
+        var abilityAdditional = document.getElementById("abilityAdditional");
+        var tbody = document.getElementById("tbody");
+        var btnAdd = document.getElementById("btnAdd");
+
+        btnAdd.addEventListener("click",(e) =>{
+            e.preventDefault();
+
+            let tr = document.createElement("tr");
+
+            let tag = `<tr>
+                           <td> ${name2.value} </td>
+                           <td> ${capacity.value} </td>
+                           <td> ${pricePerNight.value} </td>
+                           <td> ${priceAdditional.value} </td>
+                           <td> ${abilityAdditional.value} </td>
+                           <td> <button class="btn btn-sm btn-danger" onclick="DeleteRow(event)"> Delete </button> </td>
+                       </tr>`;
+
+            tr.innerHTML = tag;
+
+            tbody.appendChild(tr);
+
+            name2.value = "";
+            capacity.value = "";
+            pricePerNight.value = "";
+            priceAdditional.value = "";
+        });// end of btnAdd 
+
+        function DeleteRow(e){
+            var element = e.target.parentElement.parentElement;
+
+            element.remove();
+        }// end of DeleteRow()
+
+        function SendForm(e){
+            e.preventDefault();
+
+            var form = $("#form");
+
+            var data = new FormData();
+
+            data.append("HotelId", @hotelId);
+            // get data from table 
+            var table = document.getElementById("table");
+            for (let i = 1; i < table.rows.length; i++) {
+                let cells = table.rows.item(i).cells;
+                var index = i - 1;
+                data.append(`Rooms[${index}].Name`, cells.item(0).innerHTML);
+                data.append(`Rooms[${index}].Capacity`, cells.item(1).innerHTML);
+                data.append(`Rooms[${index}].PricePerNight`, cells.item(2).innerHTML);
+                data.append(`Rooms[${index}].PriceAdditionalPersonPerNight`, cells.item(3).innerHTML);
+                data.append(`Rooms[${index}].IsAbilityAdditionalPerson`, cells.item(4).innerHTML);
+            }// end for
+
+
+            $.ajax({
+                url:"/AdminHotel/AddRoom",
+                type:"POST",
+                data:data,
+                contentType:false,
+                processData:false,
+                headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                success: () => {
+                    swal({
+                        title: "Great Job",
+                        text: "Add Room Successfully",
+                        icon: "success",
+                        button: "Done"
+                    }).then(() => {
+                        window.location.href = "/";
+                    });// end swal
+                },// end success
+                error: () => {
+                    swal({
+                        titel: "Not Success",
+                        text: "Some thing problem",
+                        icon: "warning",
+                        button: "fail"
+                    });
+                }
+            })// end ajax
+
+        }// end sendForm()
+    </script>
+}

@@ -1,0 +1,128 @@
+﻿@page
+@model Admin.Pages.AdminHotel.AddFeatureModel
+@{
+    var roomId = Request.Query["roomId"];
+}
+
+
+<h2>Add Feature</h2>
+<hr />
+<form method="post" id="form" onsubmit="return SendForm(event)">
+    
+    <div class="d-flex justify-content-between">
+        <input class="form-control" id="name" placeholder="name"/>
+        <input class="form-control" id="icon" placeholder="icon"/>
+        <button class="btn btn-outline-dark" id="addButton">Add Feature</button>
+    </div>
+    
+    <table class="table table-hover" id="table">
+        <thead>
+            <tr>
+                <th>Icon</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+
+        <tbody id="tbody">
+
+        </tbody>
+    </table>
+    <input type="submit" class="btn btn-outline-success" value="Add feature" />
+</form>
+
+
+
+
+
+@section Scripts{
+    
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+    
+        let addButton = document.getElementById("addButton");
+        let name = document.getElementById("name")
+        let icon = document.getElementById("icon");
+        let tbody = document.getElementById("tbody");
+
+
+        addButton.addEventListener("click", (e) => {
+
+            e.preventDefault();
+            let tr = document.createElement("tr")
+
+            let tag = `<tr>
+                          <td>${icon.value}</td>
+                          <td>${name.value}</td>
+                          <td><button class="btn btn-sm btn-danger" onclick="deleteRow(event)">Delete</button></td>
+                       </tr>`;
+
+            tr.innerHTML = tag;
+            
+            tbody.appendChild(tr);
+            name.value = "";
+            icon.value = "";
+            
+        });// end add button
+
+
+
+        function deleteRow(e) {
+            e.preventDefault();
+
+            var tt = e.target.parentElement.parentElement;
+            tt.remove();
+        }
+
+        function SendForm(e) {
+            e.preventDefault();
+            let form = $("#form");
+
+            
+
+            var data = new FormData();
+
+            var table = document.getElementById("table");
+
+            for (let i = 1; i < table.rows.length; i++) {
+                let cells = table.rows.item(i).cells;
+                var cc = i - 1;
+                data.append(`RoomFeatures[${cc}].Icon`, cells.item(0).innerHTML);
+                data.append(`RoomFeatures[${cc}].Name`, cells.item(1).innerHTML);
+                
+            }
+
+            data.append("RoomId", @roomId);
+
+            $.ajax({
+                url: "/adminHotel/AddFeature",
+                type: "POST",
+                data: data,
+                contentType:false,
+                processData:false,
+                headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                success: () => {
+                    swal({
+                        title:"Great Job",
+                        text:"Add Feature With Successfully",
+                        icon:"success",
+                        button:"Done"
+                    }).then(() => {
+                        window.location.href = "/";
+                    });// end swal
+                },//end success,
+                error: function() {
+                    swal({
+                        titel:"Not Sucess",
+                        text:"Error am",
+                        icon:"warning",
+                        button:"Fail"
+                    })
+                }//end error
+
+            });// end ajax
+        }
+    </script>
+
+}

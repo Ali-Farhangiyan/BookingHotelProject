@@ -1,0 +1,58 @@
+﻿@page
+@model Admin.Pages.AdminHotel.EditHotelModel
+@{
+    var star = @Model.Hotel.NumberOfStar;
+    var id = @Model.Hotel.Id;
+    ;
+}
+
+<h1>Edit Hotel <strong><i>@Model.Hotel.Name</i></strong></h1><hr /><br />
+
+<form asp-page="EditHotel">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <label class="form-label" asp-for="@Model.Hotel.Name"></label>
+            <input class="form-control" asp-for="@Model.Hotel.Name" />
+            <span asp-validation-for="@Model.Hotel.Name" class="text-danger"></span>
+        </div>
+        <div class="col-sm-6">
+            <label class="form-label" asp-for="@Model.Hotel.City"></label>
+            <input class="form-control" asp-for="@Model.Hotel.City" />
+            <span asp-validation-for="@Model.Hotel.City" class="text-danger"></span>
+        </div>
+        <div class="col-sm-6">
+            <label class="form-label" asp-for="@Model.Hotel.NumberOfStar"></label>
+            <select class="form-select form-control" >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+        
+    </div>
+    <br /><hr />
+
+
+        
+        <input type="hidden" class="form-control" asp-for="@Model.Hotel.Id" />
+        
+
+
+    <div class="row">
+        <label class="form-label" asp-for="@Model.Hotel.Description"></label>
+        <textarea class="form-control" asp-for="@Model.Hotel.Description" ></textarea>
+    </div>
+    <br />
+
+    <div class="row">
+        <label class="form-label" asp-for="@Model.Hotel.Address"></label>
+        <textarea class="form-control" asp-for="@Model.Hotel.Address" ></textarea>
+    </div>
+    <br /><br />
+
+    <input type="submit" class="btn btn-outline-success form-control"  value="Edit Hotel"/>
+</form>

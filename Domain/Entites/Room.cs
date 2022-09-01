@@ -52,5 +52,14 @@
         {
             bookings.Add(booking);
         }
+
+        public void UpdateRoom(string name, int capacity, int pricePerNight, int priceAdditionalPersonPerNight, int hotelId)
+        {
+            Name = name;
+            Capacity = capacity;
+            PricePerNight = pricePerNight;
+            PriceAdditionalPersonPerNight = priceAdditionalPersonPerNight;
+            HotelId = hotelId;
+        }
     }
 }
