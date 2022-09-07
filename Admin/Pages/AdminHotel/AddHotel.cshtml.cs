@@ -26,10 +26,10 @@ namespace Admin.Pages.AdminHotel
 
         public async Task<IActionResult> OnPost()
         {
-            if (!ModelState.IsValid)
-            {
-                return StatusCode(400);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return StatusCode(400);
+            //}
             var files = Request.Form.Files;
             var resultImages = await imageServices.ImageUploader(files);
 

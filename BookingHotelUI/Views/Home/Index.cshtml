@@ -1,8 +1,100 @@
-﻿@{
+﻿
+@model SearchViewModel;
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="my-3 p-4 border rounded">
+    <form asp-action="SearchForm" method="post" >
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row  ">
+            <h3>Searh Hotels</h3>
+            <hr />
+            <label class="form-label" asp-for="City"></label>
+            <select class="form-select" id="city" name="cityId" placeholder="city,hotel name..." type="text"></select>
+            
+            <div class="col-sm-6">
+                <label class="form-label" asp-for="StartDate"></label>
+                <input class="form-control" asp-for="StartDate" id="startDate" type="date" />
+            </div>
+            <div class="col-sm-6">
+                <label class="form-label" asp-for="EndDate"></label>
+                <input class="form-control" asp-for="EndDate" id="endDate" type="date" />
+            </div>
+            
+        </div>
+        
+        <input type="submit" value="Search In Hotels" class="form-control btn btn-info mt-4" />
+        
+    </form>
+    <div class="row mt-3 text-center">
+        <h6 id="showDate"></h6>
+    </div>
+</section>
+
+
+
+@section Scripts{
+    
+    <script src="~/lib/select2/js/select2.full.min.js"></script>
+    <script>
+        var startDate = document.getElementById("startDate");
+        var endDate = document.getElementById("endDate");
+        var showDate = document.getElementById("showDate");
+        var search = document.getElementById("city");
+        
+
+        $("#city").select2({
+            theme: "bootstrap4",
+            placeholder: 'City or Hotel...',
+            ajax:{
+                url : `Home/GetHotels`,
+                data : (params) => {
+                     var query = {
+                         search : params.term
+                     }
+                     return query;
+                      
+                },// end data
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item.text,
+                                id: item.id
+                            }
+                        })
+                    };
+                },// processResults
+            }
+        });
+
+        startDate.addEventListener("change",(e) => {
+
+            var date = new Date(startDate.value);
+            date.setDate(date.getDate() + 1);
+            let nextDay = date.toISOString().split('T')[0]
+            
+            endDate.setAttribute("min", nextDay);
+            endDate.value = "";
+
+            
+        })
+
+        endDate.addEventListener("change",(e) => {
+            var start = new Date(startDate.value)
+            var end = new Date(endDate.value)
+            var diff = end.getDate() - start.getDate() 
+            
+            console.log(search.value);
+            console.log($("#city").select2('data')[0].text);
+            console.log($("#city").select2('data')[0].id);
+
+            showDate.innerHTML = diff + " Night"
+        });
+
+
+        
+    </script>
+}

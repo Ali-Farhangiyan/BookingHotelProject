@@ -1,5 +1,6 @@
 ﻿using Application.ContextInterfaces;
 using Domain.Entites;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,7 +27,23 @@ namespace Application.Services.AdminHotelServices.AddHotel
 
         public async Task<bool> ExecuteAsync(AddHotelDto hotel)
         {
-            var newHotel = new Hotel(hotel.Name, hotel.Description, hotel.NumberOfStar, hotel.City, hotel.Address);
+            var cities = await db.Cities.ToListAsync();
+            var existCity = cities.Any(c => c.CityName == hotel.City);
+            var newCity = new City();
+
+            if(!cities.Any(c => c.CityName == hotel.City))
+            {
+                newCity = new City(hotel.City);
+                await db.Cities.AddAsync(newCity);
+                await db.SaveChangesAsync();
+            }
+            else
+            {
+                newCity = cities.FirstOrDefault(c => c.CityName == hotel.City);
+            }
+            
+
+            var newHotel = new Hotel(hotel.Name, hotel.Description, hotel.NumberOfStar, newCity.Id, hotel.Address);
 
             foreach (var room in hotel.Rooms)
             {
@@ -71,7 +88,7 @@ namespace Application.Services.AdminHotelServices.AddHotel
         public string Address { get; set; } = null!;
 
         public List<RoomDto> Rooms { get; set; } = null!;
-        public List<ImageDto> Images { get; set; } = null!;
+        public List<ImageDto>? Images { get; set; } 
 
         public List<HotelFeatureDto> HotelFeatures { get; set; } = null!;
     }

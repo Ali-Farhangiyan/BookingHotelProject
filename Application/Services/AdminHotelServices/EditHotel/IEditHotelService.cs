@@ -32,12 +32,25 @@ namespace Application.Services.AdminHotelServices.EditHotel
         {
             
 
-            var updateHotel = await db.Hotels.SingleOrDefaultAsync(h => h.Id == editHotel.Id);
+            var updateHotel = await db.Hotels
+                .SingleOrDefaultAsync(h => h.Id == editHotel.Id);
 
-            updateHotel.UpdateHotel(editHotel.Name, editHotel.Description, editHotel.NumberOfStar, editHotel.City, editHotel.Address);
+            if (updateHotel is null) return false;
+
+            var updateCity = await db.Cities
+                .Include(c => c.Hotels.Where(h => h.Id == updateHotel.Id))
+                .FirstOrDefaultAsync(c => c.Id == updateHotel.CityId);
+
+            if (updateCity is null) return false;
+
+
+            updateHotel.UpdateHotel(editHotel.Name, editHotel.Description, editHotel.NumberOfStar, editHotel.Address);
+
+            updateCity.UpdateCity(editHotel.City);
             
 
             db.Hotels.Update(updateHotel);
+            db.Cities.Update(updateCity);
             var result = await db.SaveChangesAsync();
             if (result > 0) return true;
             return false;
@@ -51,7 +64,7 @@ namespace Application.Services.AdminHotelServices.EditHotel
                 Name = h.Name,
                 Description = h.Description,
                 NumberOfStar = h.NumberOfStar,
-                City = h.City,
+                City = h.City.CityName,
                 Address = h.Address
             }).FirstOrDefaultAsync();
 

@@ -1,4 +1,5 @@
 using Application.ContextInterfaces;
+using Application.Services.UserHotelServices.UserFacadeHotelService;
 using Infrastructure.AddIdentityDatabaseToIservice;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Contexts;
@@ -12,6 +13,7 @@ builder.Services.AddDbContext<DatabaseContext>(option => option.UseSqlServer(bui
 builder.Services.AddMyIdentityService(builder.Configuration);
 
 builder.Services.AddTransient<IDatabaseContext, DatabaseContext>();
+builder.Services.AddTransient<IUserHotelService, UserHotelService>();
 
 var app = builder.Build();
 

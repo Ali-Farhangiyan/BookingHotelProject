@@ -1,0 +1,48 @@
+﻿@using Application.Services.UserHotelServices.SearchHotelsByNameAndDate
+@model List<IGrouping<bool, SearchHotelsByNameAndDateDto>>;
+
+@{
+    var startDate = TempData["startDate"];
+    var endDate = TempData["endDate"];
+}
+<h1>Hotels</h1>
+
+@foreach (var hotels in Model)
+{
+    
+    @foreach (var hotel in hotels)
+    {
+        <div class="row border rounded p-3 my-3">
+            <div class="col-3">
+                <img class="img-fluid" src="@hotel.Image">
+            </div>
+
+            <div class="col-6 ">
+                <h2> @hotel.Name</h2>
+                
+                <p> @for (var i = 0; i < hotel.Star; i++)
+                    {
+                        <i class="text-warning fa-solid fa-star"></i>
+                    }
+                </p>
+                <h6>@hotel.Address</h6>
+
+                @if(hotels.Key == false){
+                    <h6 class="bg-success border d-inline-block rounded-circle p-2">Free</h6>
+                }else{
+                    <h6 class="bg-danger border d-inline-block rounded-circle p-2">No Capcity</h6>
+                }
+            </div>
+            <div class="col-3 d-flex flex-column border-start justify-content-center align-content-center">
+
+                <p>Start Price for <strong>1 night</strong> </p>
+                
+                <h3 class="text-danger fs-4 ">@hotel.StartPrice.ToString("C")</h3>
+                
+                <a asp-action="ShowHotel" asp-controller="Shopping" asp-route-hotelId="@hotel.Id" asp-route-startDate="@startDate" asp-route-endDate="@endDate"
+                    class="justify-content-end btn btn-outline-danger">Room Reserv</a>
+                
+            </div>
+        </div>
+    }
+}

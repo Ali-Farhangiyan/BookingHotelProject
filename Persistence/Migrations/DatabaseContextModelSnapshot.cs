@@ -30,13 +30,30 @@ namespace Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<int?>("BookingCode")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BookingStatus")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<double>("LengthOfStay")
+                        .HasColumnType("float");
+
+                    b.Property<string>("PassengerFamilyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PassengerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
@@ -47,7 +64,24 @@ namespace Persistence.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entites.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CityName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entites.Hotel", b =>
@@ -62,9 +96,8 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("CityId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -83,7 +116,9 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Hotels");
+                    b.HasIndex("CityId");
+
+                    b.ToTable("Hotels", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entites.HotelFeature", b =>
@@ -109,7 +144,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("HotelId");
 
-                    b.ToTable("HotelFeatures");
+                    b.ToTable("HotelFeatures", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entites.Image", b =>
@@ -131,7 +166,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("HotelId");
 
-                    b.ToTable("Images");
+                    b.ToTable("Images", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entites.Room", b =>
@@ -165,7 +200,31 @@ namespace Persistence.Migrations
 
                     b.HasIndex("HotelId");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entites.RoomBookingDate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("RoomBookingDate", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entites.RoomFeature", b =>
@@ -191,7 +250,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("RoomFeatures");
+                    b.ToTable("RoomFeatures", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entites.Booking", b =>
@@ -203,6 +262,15 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("Domain.Entites.Hotel", b =>
+                {
+                    b.HasOne("Domain.Entites.City", "City")
+                        .WithMany("Hotels")
+                        .HasForeignKey("CityId");
+
+                    b.Navigation("City");
                 });
 
             modelBuilder.Entity("Domain.Entites.HotelFeature", b =>
@@ -238,6 +306,17 @@ namespace Persistence.Migrations
                     b.Navigation("Hotel");
                 });
 
+            modelBuilder.Entity("Domain.Entites.RoomBookingDate", b =>
+                {
+                    b.HasOne("Domain.Entites.Room", "Room")
+                        .WithMany("RoomBookingDates")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+                });
+
             modelBuilder.Entity("Domain.Entites.RoomFeature", b =>
                 {
                     b.HasOne("Domain.Entites.Room", "Room")
@@ -247,6 +326,11 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("Domain.Entites.City", b =>
+                {
+                    b.Navigation("Hotels");
                 });
 
             modelBuilder.Entity("Domain.Entites.Hotel", b =>
@@ -261,6 +345,8 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Entites.Room", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("RoomBookingDates");
 
                     b.Navigation("RoomFeatures");
                 });

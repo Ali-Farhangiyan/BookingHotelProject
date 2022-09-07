@@ -18,7 +18,7 @@ namespace Domain.Entites
 
         public int NumberOfStar { get; private set; } 
 
-        public string City { get; private set; } = null!;
+        //public string City { get; private set; } = null!;
 
         public string Address { get; private set; } = null!;
 
@@ -32,21 +32,28 @@ namespace Domain.Entites
         private readonly List<HotelFeature> hotelFeatures = new List<HotelFeature>();
         public ICollection<HotelFeature> HotelFeatures => hotelFeatures.AsReadOnly();
 
+
+
+        public City City { get; private set; } = null!;
+
+        public int CityId { get; private set; }
+
         public Hotel()
         {
             // ef core
         }
 
-        public Hotel(string name, string description, int numberOfStar, string city, string address)
+        public Hotel(string name, string description, int numberOfStar, int cityId, string address)
         {
             Name = name;
             Description = description;
             NumberOfStar = numberOfStar;
-            City = city;
+            CityId = cityId;
             Address = address;
             AddSlug();
         }
 
+        
         private void AddSlug()
         {
             Slug = string.Join('-', Name.Split(" "));
@@ -82,12 +89,11 @@ namespace Domain.Entites
             hotelFeatures.Add(hotelFeature);
         }
 
-        public void UpdateHotel(string name, string description, int numberOfStar, string city, string address)
+        public void UpdateHotel(string name, string description, int numberOfStar, string address)
         {
             Name = name;
             Description = description;
             NumberOfStar = numberOfStar;
-            City = city;
             Address = address;
             AddSlug();
         }

@@ -17,6 +17,9 @@ namespace Application.ContextInterfaces
         DbSet<RoomFeature> RoomFeatures { get; set; }
         DbSet<HotelFeature> HotelFeatures { get; set; }
 
+        DbSet<RoomBookingDate> RoomBookingDate { get; set; }
+        DbSet<City> Cities { get; set; }
+
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

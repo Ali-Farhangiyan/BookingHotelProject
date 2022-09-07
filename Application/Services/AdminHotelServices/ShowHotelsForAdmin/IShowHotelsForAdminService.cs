@@ -29,6 +29,7 @@ namespace Application.Services.AdminHotelServices.ShowHotelsForAdmin
         public async Task<PaginatedList<ShowHotelAdminDto>> ExecuteAsync(RequestAdminHotelDto request)
         {
             var query = db.Hotels
+                .Include(h => h.City)
                 .Include(h => h.Rooms)
                 .ThenInclude(r => r.RoomFeatures)
                 .Include(h => h.HotelFeatures)
@@ -40,7 +41,7 @@ namespace Application.Services.AdminHotelServices.ShowHotelsForAdmin
             var hotels = await query.Select(h => new ShowHotelAdminDto
             {
                 Id = h.Id,
-                City = h.City,
+                City = h.City.CityName,
                 Name = h.Name,
                 NumberOfRooms = h.Rooms.Count,
                 NumberOfStars = h.NumberOfStar
@@ -74,7 +75,7 @@ namespace Application.Services.AdminHotelServices.ShowHotelsForAdmin
 
             if (!string.IsNullOrEmpty(request.SearchKey))
             {
-                query = query.Where(h => h.Name.Contains(request.SearchKey) || h.City.Contains(request.SearchKey));
+                query = query.Where(h => h.Name.Contains(request.SearchKey) || h.City.CityName.Contains(request.SearchKey));
             }
 
             return query;

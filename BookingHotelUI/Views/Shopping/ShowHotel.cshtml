@@ -1,0 +1,90 @@
+﻿@using Application.Services.UserHotelServices.ShowHotelWithRelatedDate
+@model ShowHotelWithRelatedDateDto;
+
+
+<h2> <i><strong>@Model.HotelName</strong></i></h2>
+<hr />
+
+<section class="row">
+    <!-- carsuol for images -->
+    <div class="col-sm-8">
+        <div class="mb-3" id="mainImage" style="position:relative">
+            <img src="@Model.Images.LastOrDefault().Src" class="img-fluid" />
+            <span onclick="ChangeImage(event)"><i class="fa-solid fa-arrow-right text-white" style="position:absolute; right:2%; top:50%;"></i></span>
+            <span onclick="ChangeImage(event)"><i class="fa-solid fa-arrow-left text-white" style="position:absolute; left:2%; top:50%;"></i></span>
+        </div>
+
+        <div class="d-flex justify-content-around">
+            @foreach (var image in Model.Images)
+            {
+                <img src="@image.Src" onclick="ShowImage(event)" class="img-fluid" width="25%" height="50%">
+            }
+        </div>
+    </div>
+
+    <div class="col-sm-4">
+        <div >
+
+        </div>
+    </div>
+</section>
+
+<hr /><br />
+
+@foreach (var rooms in Model.Rooms)
+{
+
+    @foreach (var room in rooms)
+    {
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">@room.Name</h3>
+                
+            </div>
+            @{
+                var totalPrice = room.PriceForOneNight * room.LengthOfStay;
+            }
+            <div class="card-body">
+                <div class="d-flex justify-content-around">
+                    <p class="card-text border-end fs-3  pe-2">Start Price For <strong>@room.LengthOfStay nights</strong></p>
+                    <p class="card-text text-danger fw-bold fs-3 ps-3 border-end pe-3">@totalPrice.ToString("C")</p>
+                    <a asp-action="" asp-controller="" class="btn btn-outline-info btn">Online Booking</a>
+                </div>
+                
+            </div>
+
+            <div class="card-footer">
+                <h3>Features</h3>
+                <div class="d-flex">
+                    @foreach (var item in room.RoomFeatures)
+                    {
+                        <p class="card-text mx-2 fw-light">@item.Name</p>
+                    }
+                </div>
+                
+                
+            </div>
+        </div>
+    }
+}
+
+@section Scripts{
+    <script>
+
+        let mainImage = document.getElementById("mainImage");
+
+
+        function ShowImage(e) {
+            let tar = e.target
+            let src = tar.getAttribute("src");
+            let newImage = `<img src=${src} class="img-fluid rounded">`;
+
+            mainImage.innerHTML = newImage;
+        }
+
+
+        function ChangeImage(e){
+            
+        }
+    </script>
+}

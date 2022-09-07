@@ -19,10 +19,15 @@
         public Hotel Hotel { get; private set; } = null!;
 
         private readonly List<RoomFeature> features = new List<RoomFeature>();
-        public ICollection<RoomFeature> RoomFeatures => features.AsReadOnly();
+        public ICollection<RoomFeature> RoomFeatures => features;
 
         private readonly List<Booking> bookings = new List<Booking>();
         public ICollection<Booking> Bookings => bookings.AsReadOnly();
+
+        private readonly List<RoomBookingDate> roomBookingDates = new List<RoomBookingDate>();
+        public ICollection<RoomBookingDate> RoomBookingDates => roomBookingDates.AsReadOnly();
+
+
 
         public Room()
         {
@@ -53,6 +58,11 @@
             bookings.Add(booking);
         }
 
+        public void AddRoomBookingDate(RoomBookingDate roomBookingDate)
+        {
+            roomBookingDates.Add(roomBookingDate);
+        }
+
         public void UpdateRoom(string name, int capacity, int pricePerNight, int priceAdditionalPersonPerNight, int hotelId)
         {
             Name = name;
@@ -61,5 +71,7 @@
             PriceAdditionalPersonPerNight = priceAdditionalPersonPerNight;
             HotelId = hotelId;
         }
+
+
     }
 }
