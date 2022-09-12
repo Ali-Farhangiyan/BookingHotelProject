@@ -1,5 +1,6 @@
 ﻿using Application.ContextInterfaces;
 using Application.Services.UserHotelServices.GetHotelsForSearchKey;
+using Application.Services.UserHotelServices.OrderForBookingHotel;
 using Application.Services.UserHotelServices.SearchHotelsByNameAndDate;
 using Application.Services.UserHotelServices.ShowHotelWithRelatedDate;
 using System;
@@ -16,6 +17,8 @@ namespace Application.Services.UserHotelServices.UserFacadeHotelService
         public IGetHotelsForSearchKeyService GetHotels { get; }
 
         public IShowHotelWithRelatedDateService ShowRelatedHotel { get; }
+
+        public IOrderForBookingHotelService OrderForBooking { get; }
     }
 
     public class UserHotelService : IUserHotelService
@@ -41,5 +44,10 @@ namespace Application.Services.UserHotelServices.UserFacadeHotelService
         private IShowHotelWithRelatedDateService showRelatedHotel;
         public IShowHotelWithRelatedDateService ShowRelatedHotel =>
             showRelatedHotel ?? new ShowHotelWithRelatedDateService(db);
+
+
+        private IOrderForBookingHotelService orderForBooking;
+        public IOrderForBookingHotelService OrderForBooking =>
+            orderForBooking ?? new OrderForBookingHotelService(db);
     }
 }

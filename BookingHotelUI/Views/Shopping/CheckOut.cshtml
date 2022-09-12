@@ -1,0 +1,19 @@
+﻿
+
+
+<h1>CheckOut Of Payment</h1>
+<hr /><br />
+
+@if (!string.IsNullOrEmpty(TempData["messageSuccess"]?.ToString()))
+{
+    <div class="bg-success text-white p-5 border-success rounded">
+        <h3>@TempData["messageSuccess"].ToString()</h3>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(TempData["messageFail"]?.ToString()))
+{
+    <div class="bg-danger text-white p-5 border-danger rounded">
+        <h3>@TempData["messageFail"].ToString()</h3>
+    </div>
+}

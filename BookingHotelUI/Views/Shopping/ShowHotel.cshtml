@@ -1,6 +1,8 @@
 ﻿@using Application.Services.UserHotelServices.ShowHotelWithRelatedDate
 @model ShowHotelWithRelatedDateDto;
-
+@{
+    
+}
 
 <h2> <i><strong>@Model.HotelName</strong></i></h2>
 <hr />
@@ -48,7 +50,17 @@
                 <div class="d-flex justify-content-around">
                     <p class="card-text border-end fs-3  pe-2">Start Price For <strong>@room.LengthOfStay nights</strong></p>
                     <p class="card-text text-danger fw-bold fs-3 ps-3 border-end pe-3">@totalPrice.ToString("C")</p>
-                    <a asp-action="" asp-controller="" class="btn btn-outline-info btn">Online Booking</a>
+                    <a asp-action="RegisterBooking" asp-controller="Shopping"
+                        asp-route-hotelId="@Model.Id"
+                        asp-route-roomId="@room.Id"
+                        asp-route-image="@Model.Images.LastOrDefault().Src"
+                        asp-route-startDate="@Model.StartDate"
+                        asp-route-endDate="@Model.EndDate"
+                        asp-route-price="@room.PriceForOneNight"
+                        asp-route-lenghtOfStay="@room.LengthOfStay"
+                        asp-route-hotelName="@Model.HotelName"
+                        asp-route-roomName="@room.Name"
+                    class="btn btn-outline-info btn">Online Booking</a>
                 </div>
                 
             </div>

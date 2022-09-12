@@ -10,6 +10,7 @@
 @foreach (var hotels in Model)
 {
     
+    
     @foreach (var hotel in hotels)
     {
         <div class="row border rounded p-3 my-3">
@@ -27,7 +28,7 @@
                 </p>
                 <h6>@hotel.Address</h6>
 
-                @if(hotels.Key == false){
+                @if(hotels.Key == true){
                     <h6 class="bg-success border d-inline-block rounded-circle p-2">Free</h6>
                 }else{
                     <h6 class="bg-danger border d-inline-block rounded-circle p-2">No Capcity</h6>

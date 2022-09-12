@@ -1,0 +1,107 @@
+﻿@using Newtonsoft.Json
+
+
+
+@{
+    
+    
+    var userInfo = JsonConvert.DeserializeObject<BookingRegisterViewModel>(TempData["RegisterInfo"].ToString());
+    var infoHotel = JsonConvert.DeserializeObject<BookingViewModel>(TempData["BookingViewMode"].ToString());
+
+    var totalPrice = infoHotel.Price * infoHotel.LengthOfStay;
+}
+<h1>Confirm Page</h1>
+<hr />
+<br />
+<!-- Info User -->
+
+<div class="row border p-3">
+    <h3>Info Of Booking User</h3>
+    <hr />
+    <br />
+    <div class="row">
+        <div class="col-sm-4">
+            <p>Name:</p>
+            <h6>@userInfo.FirstName @userInfo.LastName</h6>
+        </div>
+
+        <div class="col-sm-4 border-start">
+            <p>Email: </p>
+            <h6>@userInfo.Email</h6>
+        </div>
+
+        <div class="col-sm-4 border-start">
+            <p>PhoneNumber: </p>
+            <h6>@userInfo.PhoneNumber</h6>
+        </div>
+    </div>
+</div>
+
+<br /><br />
+
+<div class="row border p-3">
+    <h3>Info Of Main Passenger</h3>
+    <hr /><br />
+
+    <div class="row">
+        <p>Name:</p>
+        <h6>@userInfo.PassengerName @userInfo.PassengerFamilyName</h6>
+    </div>
+</div>
+<br /><br />
+
+<div class="row border p-3">
+    <h3>Info Of Booking Hote</h3>
+    <hr />
+    <br />
+    <div class="row">
+        <div class="col-sm-4 border-bottom">
+            <p>Hotel:</p>
+            <h6>@infoHotel.HotelName</h6>
+        </div>
+
+        <div class="col-sm-4 border-start border-bottom">
+            <p>Start Date:</p>
+            <h6>@infoHotel.StartDate.ToShortDateString()</h6>
+        </div>
+
+        <div class="col-sm-4 border-start border-bottom">
+            <p>End Date:</p>
+            <h6>@infoHotel.EndDate.ToShortDateString()</h6>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-4 border-bottom">
+            <p>Room:</p>
+            <h6>@infoHotel.RoomName</h6>
+        </div>
+
+        <div class="col-sm-4 border-start border-bottom">
+            <p>Length Of Stay:</p>
+            <h6>@infoHotel.LengthOfStay Nights</h6>
+        </div>
+
+        <div class="col-sm-4 border-start border-bottom">
+            <p>Price One Night:</p>
+            <h6>@infoHotel.Price.ToString("C")</h6>
+        </div>
+    </div>
+    <div class="row text-center p-4">
+        <p class="fw-bold">Total Price:</p>
+        <h3 class="text-danger">@totalPrice.ToString("C")</h3>
+
+    </div>
+</div>
+<br /><br />
+<div class="row justify-content-center">
+    <a asp-action="PayAction" asp-controller="Shopping"
+        asp-route-roomId = "@infoHotel.RoomId"
+        asp-route-price = "@infoHotel.Price"
+        asp-route-startDate = "@infoHotel.StartDate"
+        asp-route-endDate = "@infoHotel.EndDate"
+        asp-route-passengerName="@userInfo.PassengerName"
+        asp-route-passengerFamilyName="@userInfo.PassengerFamilyName"
+
+        class="btn btn-success btn-lg  w-50">Pay</a>
+</div>

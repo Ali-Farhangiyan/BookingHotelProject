@@ -63,6 +63,7 @@
             roomBookingDates.Add(roomBookingDate);
         }
 
+        
         public void UpdateRoom(string name, int capacity, int pricePerNight, int priceAdditionalPersonPerNight, int hotelId)
         {
             Name = name;

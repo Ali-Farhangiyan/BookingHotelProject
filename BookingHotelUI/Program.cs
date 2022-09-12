@@ -1,4 +1,5 @@
 using Application.ContextInterfaces;
+using Application.Services.PaymentServices.PaymentFacadeService;
 using Application.Services.UserHotelServices.UserFacadeHotelService;
 using Infrastructure.AddIdentityDatabaseToIservice;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ builder.Services.AddMyIdentityService(builder.Configuration);
 
 builder.Services.AddTransient<IDatabaseContext, DatabaseContext>();
 builder.Services.AddTransient<IUserHotelService, UserHotelService>();
+builder.Services.AddTransient<IPaymentService, PaymentService>();
 
 var app = builder.Build();
 

@@ -5,10 +5,11 @@
         public int Id { get; private set; }
 
         public int RoomId { get; private set; }
+        public int PriceOneNight { get; private set; }
 
         public int? BookingCode { get; private set; } = null;
 
-        public double LengthOfStay { get; private set; }
+        public int LengthOfStay { get; private set; }
         public Room Room { get; private set; } = null!;
 
         public DateTime? StartDate { get; private set; }
@@ -32,7 +33,7 @@
             DateTime? startDate,
             DateTime? enddate, 
             int bookingCode,
-            string passengerName, string passengerFullName)
+            string passengerName, string passengerFullName, int priceOneNight)
         {
             RoomId = roomId;
             StartDate = startDate;
@@ -41,15 +42,16 @@
             BookingCode = bookingCode;
             PassengerName = passengerName;
             PassengerFamilyName = passengerFullName;
+            PriceOneNight = priceOneNight;
             SetLengthOfStay();
         }
 
-        public void SetLengthOfStay()
+        private void SetLengthOfStay()
         {
             if(EndDate is not null && StartDate is not null)
             {
                 var length = EndDate - StartDate;
-                LengthOfStay = length.Value.TotalDays;
+                LengthOfStay = (int) length.Value.TotalDays;
             }
             
         }
@@ -63,6 +65,28 @@
         {
             BookingStatus = BookingStatus.Paid;
         }
+
+        public int GetTotalPrice()
+        {
+            return LengthOfStay * PriceOneNight;
+        }
+
+        public int GetRoomId()
+        {
+            return RoomId;
+        }
+
+        public DateTime? GetStartDate()
+        {
+            return StartDate;
+        }
+
+        public DateTime? GetEndDate()
+        {
+            return EndDate;
+        }
+
+
     }
 
     public enum BookingStatus

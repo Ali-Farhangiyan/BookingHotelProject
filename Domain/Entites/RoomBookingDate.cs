@@ -16,5 +16,22 @@ namespace Domain.Entites
 
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+
+        public RoomBookingDate(int roomId, DateTime? startDate, DateTime? enddate)
+        {
+            RoomId = roomId;
+            StartDate = startDate;
+            EndDate = enddate;
+        }
+
+        public void CreateRoomBookingDate(int roomId, DateTime startDate, DateTime enddate)
+        {
+            new RoomBookingDate(roomId, startDate, enddate);
+        }
+
+        public RoomBookingDate()
+        {
+
+        }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Contexts;
 
@@ -11,9 +12,10 @@ using Persistence.Contexts;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220911041816_addPaymentEntity")]
+    partial class addPaymentEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,8 +41,8 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LengthOfStay")
-                        .HasColumnType("int");
+                    b.Property<double>("LengthOfStay")
+                        .HasColumnType("float");
 
                     b.Property<string>("PassengerFamilyName")
                         .IsRequired()
@@ -49,9 +51,6 @@ namespace Persistence.Migrations
                     b.Property<string>("PassengerName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PriceOneNight")
-                        .HasColumnType("int");
 
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
@@ -170,37 +169,6 @@ namespace Persistence.Migrations
                     b.HasIndex("HotelId");
 
                     b.ToTable("Images");
-                });
-
-            modelBuilder.Entity("Domain.Entites.Payment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Authority")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("BookingId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DatePay")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsPay")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("RefId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookingId");
-
-                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("Domain.Entites.Room", b =>
@@ -329,17 +297,6 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Hotel");
-                });
-
-            modelBuilder.Entity("Domain.Entites.Payment", b =>
-                {
-                    b.HasOne("Domain.Entites.Booking", "Booking")
-                        .WithMany()
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("Domain.Entites.Room", b =>

@@ -62,6 +62,8 @@ namespace Application.Services.UserHotelServices.ShowHotelWithRelatedDate
                     Id = hotel.Id,
                     HotelName = hotel.Name,
                     Description = hotel.Description,
+                    StartDate = startDate,
+                    EndDate = endDate,
                     Images = hotel.Images.Select(i => new ImageDto
                     {
                         Src = i.Src
@@ -87,6 +89,8 @@ namespace Application.Services.UserHotelServices.ShowHotelWithRelatedDate
         public string HotelName { get; set; }
 
         public string Description { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
 
         public List<ImageDto> Images { get; set; }
 

@@ -37,21 +37,21 @@ namespace Application.Services.UserHotelServices.SearchHotelsByNameAndDate
                 .Include(h => h.Images)
                 .Where(h => h.CityId == cityId).ToListAsync();
 
-            //var hotelsCity = await db.Cities
-            //    .Include(c => c.Hotels)
-            //    .Where(c => c.Id == cityId).ToListAsync();
 
 
+           
 
             var date = await db.RoomBookingDate
                 .Include(d => d.Room)
-                .Where(c => c.StartDate == null || c.StartDate >= endDate )
-                .Where(c => c.EndDate == null || c.EndDate <= startDate)
+                .Where(c=> (startDate >= c.StartDate && endDate <= c.EndDate) )
                 .Select(c => c.RoomId)
                 .ToListAsync();
 
+            
 
-            var hotels = hotelsCity.GroupBy(hotel => hotel.Rooms.Any(room => date.Contains(room.Id)), h => new SearchHotelsByNameAndDateDto
+            
+
+            var hotels = hotelsCity.GroupBy(hotel => hotel.Rooms.Any(room => !date.Contains(room.Id)), h => new SearchHotelsByNameAndDateDto
             {
                 Id = h.Id,
                 Name = h.Name,

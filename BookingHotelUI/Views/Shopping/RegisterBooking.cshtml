@@ -1,0 +1,105 @@
+﻿@using Newtonsoft.Json
+@model BookingRegisterViewModel
+
+@{
+    var infoHotel = JsonConvert.DeserializeObject<BookingViewModel>(TempData["BookingViewMode"].ToString());
+    TempData.Keep("BookingViewMode");
+    var totalPrice = infoHotel.Price * infoHotel.LengthOfStay;
+}
+
+
+<h1>Booking for <i>@infoHotel.HotelName</i></h1>
+<hr />
+<div class="row">
+    <div class="col-sm-8">
+        <form asp-action="RegisterBooking" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <input asp-for="FirstName" class="form-control" type="text" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input asp-for="LastName" class="form-control" type="text" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" type="text" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="PhoneNumber" class="form-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" type="text" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+            
+                <label asp-for="NationalCode" class="form-label"></label>
+                <input asp-for="NationalCode" class="form-control" type="text" />
+                <span asp-validation-for="NationalCode" class="text-danger"></span>
+
+            <hr />
+            <br /><br />
+            <div class="row">
+                <div class="col-sm-6">
+                    <label asp-for="PassengerName" class="form-label"></label>
+                    <input asp-for="PassengerName" class="form-control" type="text" />
+                    <span asp-validation-for="PassengerName" class="text-danger"></span>
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="PassengerFamilyName" class="form-label"></label>
+                    <input asp-for="PassengerFamilyName" class="form-control" type="text" />
+                    <span asp-validation-for="PassengerFamilyName" class="text-danger"></span>
+                </div>
+            </div>
+            <br /><br />
+            <input type="submit" value="Next" class="btn btn-danger" />
+            
+        </form>
+
+        
+    </div>
+
+    <div class="col-sm-4">
+        <div class="card">
+            <img class="card-img-top" src="@infoHotel.Image" />
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <p class="card-text">Entry Date</p>
+                        <h6 class="card-title">@infoHotel.StartDate.ToShortDateString()</h6>
+                    </div>
+                    <div class="col-6">
+                        <p class="card-text">Exit Date</p>
+                        <h6 class="card-title">@infoHotel.EndDate.ToShortDateString()</h6>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <p class="card-text">Price OneNight</p>
+                        <h6 class="card-title">@infoHotel.Price.ToString("C")</h6>
+                    </div>
+                    <div class="col-6">
+                        <p class="card-text">Length Of Stay</p>
+                        <h6 class="card-title">@infoHotel.LengthOfStay</h6>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <p class="card-text">Total Price</p>
+                    <h6 class="card-title">@totalPrice.ToString("C")</h6>
+                </div>
+
+            </div>
+        </img>
+    </div>
+</div>
+
