@@ -1,4 +1,5 @@
 ﻿using Application.ContextInterfaces;
+using Domain.Entites;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,12 @@ namespace Application.Services.UserHotelServices.ShowHotelWithRelatedDate
     public class ShowHotelWithRelatedDateService : IShowHotelWithRelatedDateService
     {
         private readonly IDatabaseContext db;
+        private readonly IIdentityDatabaseContext identityDb;
 
-        public ShowHotelWithRelatedDateService(IDatabaseContext db)
+        public ShowHotelWithRelatedDateService(IDatabaseContext db, IIdentityDatabaseContext identityDb)
         {
             this.db = db;
+            this.identityDb = identityDb;
         }
 
         public async Task<ShowHotelWithRelatedDateDto> ExecuteAsync(int hotelId, DateTime startDate, DateTime endDate)
@@ -52,6 +55,20 @@ namespace Application.Services.UserHotelServices.ShowHotelWithRelatedDate
                     }).ToList(),
                 }).ToList();
 
+            var comments = await db.Comments
+                .Where(c => c.StatusComment == StatusComment.Accepted && c.HotelId == hotelId)
+                .Select(c => new ShowCommentDto
+                {
+                    UserName = c.UserName, 
+                    Id = c.Id,
+                    RoomName = db.Bookings.Include(b => b.Room).Where(b => b.UserId == c.UserId).FirstOrDefault().Room.Name,
+                    DateOfRegisterComment = c.DateOfRegisterComment,
+                    DateOfStay = (DateTime)db.Bookings.Where(b => b.UserId == c.UserId).FirstOrDefault().StartDate,
+                    Rate = c.AverageRateUser,
+                    WeakPoints = c.WeakPoints,
+                    Strength = c.Strength
+                }).ToListAsync();
+
             var hotel = await db.Hotels
                 .Include(h => h.Rooms.Where(r => r.HotelId == hotelId))
                 .ThenInclude(r => r.RoomFeatures)
@@ -62,6 +79,7 @@ namespace Application.Services.UserHotelServices.ShowHotelWithRelatedDate
                     Id = hotel.Id,
                     HotelName = hotel.Name,
                     Description = hotel.Description,
+                    Rate = hotel.Rate,
                     StartDate = startDate,
                     EndDate = endDate,
                     Images = hotel.Images.Select(i => new ImageDto
@@ -73,7 +91,8 @@ namespace Application.Services.UserHotelServices.ShowHotelWithRelatedDate
                         Icon = hf.Icon,
                         Name = hf.Name
                     }).ToList(),
-                    Rooms = totalRooms
+                    Rooms = totalRooms,
+                    Comments = comments
                 })
                 .FirstOrDefaultAsync(h => h.Id == hotelId);
 
@@ -88,6 +107,8 @@ namespace Application.Services.UserHotelServices.ShowHotelWithRelatedDate
 
         public string HotelName { get; set; }
 
+        public double Rate { get; set; }
+
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -97,7 +118,7 @@ namespace Application.Services.UserHotelServices.ShowHotelWithRelatedDate
         public List<ShowHotelsFeatureDto> HotelsFeatures { get; set; }
         public List<IGrouping<bool, ShowRoomsDto>> Rooms { get; set; }
 
-        
+        public List<ShowCommentDto> Comments { get; set; }
     }
 
     public class ImageDto
@@ -126,5 +147,23 @@ namespace Application.Services.UserHotelServices.ShowHotelWithRelatedDate
         public List<ShowHotelsFeatureDto> RoomFeatures { get; set; }
 
 
+    }
+
+    public class ShowCommentDto
+    {
+        public int Id { get; set; }
+
+        public string UserName { get; set; } = null!;
+
+        public DateTime DateOfRegisterComment { get; set; }
+
+        public DateTime DateOfStay { get; set; }
+
+        public string RoomName { get; set; } = null!;
+
+        public string Strength { get; set; } = null!;
+        public string WeakPoints { get; set; } = null!;
+
+        public double Rate { get; set; }
     }
 }

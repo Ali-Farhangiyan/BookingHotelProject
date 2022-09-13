@@ -1,0 +1,42 @@
+﻿@page
+@model Admin.Pages.Comment.IndexModel
+@{
+}
+
+<h1>Show Comments </h1>
+<hr /><br />
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>HotelName</th>
+            <th>RoomName</th>
+            <th>Status</th>
+            <th>Operations</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var comment in Model.Comments)
+        {
+            <tr>
+                <td>@comment.Id</td>
+                <td>@comment.HotelName</td>
+                <td>@comment.RoomName</td>
+                
+                @if(@comment.Status == "Waiting"){
+                    <td class="bg-warning">@comment.Status</td>
+                }else if(@comment.Status == "Rejected"){
+                    <td class="bg-danger">@comment.Status</td>
+                }else{
+                    <td class="bg-success">@comment.Status</td>
+                }
+
+                <td>
+                    <a asp-page="EditComment" asp-route-id="@comment.Id" class="btn btn-success">Change Status</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -20,7 +20,7 @@ namespace Application.ContextInterfaces
         DbSet<RoomBookingDate> RoomBookingDate { get; set; }
         DbSet<City> Cities { get; set; }
         DbSet<Payment> Payments { get; set; }
-
+        DbSet<Comment> Comments { get; set; }
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

@@ -18,7 +18,12 @@ namespace Domain.Entites
 
         public int NumberOfStar { get; private set; } 
 
-        //public string City { get; private set; } = null!;
+        public double Rate { get; private set; }
+
+        public void SetRate(double rate)
+        {
+            Rate = rate;
+        }
 
         public string Address { get; private set; } = null!;
 

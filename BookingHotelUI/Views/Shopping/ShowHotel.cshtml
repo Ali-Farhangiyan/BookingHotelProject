@@ -1,7 +1,16 @@
 ﻿@using Application.Services.UserHotelServices.ShowHotelWithRelatedDate
 @model ShowHotelWithRelatedDateDto;
 @{
-    
+    string SelectColorRate(double number){
+
+        if(number >= 7){
+            return "bg-success";
+        }else if(number < 7 && number >= 5){
+            return "bg-warning";
+        }else{
+            return "bg-danger";
+        }
+    }
 }
 
 <h2> <i><strong>@Model.HotelName</strong></i></h2>
@@ -30,6 +39,8 @@
         </div>
     </div>
 </section>
+
+<h1>Rate: @Model.Rate</h1>
 
 <hr /><br />
 
@@ -79,13 +90,156 @@
         </div>
     }
 }
+<hr /><br />
+<button class="btn btn-info form-control " id="registerComment">Add Comment</button>
+<hr /><br />
+
+
+<div class="d-none row border rounded p-3" id="formDiv">
+    <h2>Comment</h2>
+    <form method="post" class="" onsubmit="return SendComment(event)" id="form">
+        <div class="row border rounded p-3 mb-3">
+            <h3>Strength and weak points about hotel</h3>
+            <textarea id="strength" placeholder="wirte your Strenfgth..." class=" mb-3 form-control border-success"></textarea>
+            <textarea id="weakPoints" placeholder="wirte your Weak Points..." class="form-control border-danger"></textarea>
+        </div>
+        <br />
+        <div class="row border rounded p-3 mb-3">
+            <h3>Your comment about hotel</h3>
+            <label class="form-label" for="quality">Quality<span id="squality" class="fs-3 text-danger ms-5">5</span></label>
+            <input type="range" class="form-range" value="5" min="1" max="10" id="quality" />
+
+            <label class="form-label" for="cleaning">Cleaning<span id="scleaning" class="fs-3 text-danger ms-5">5</span></label>
+            <input type="range" class="form-range" value="5" min="1" max="10" id="cleaning" />
+
+            <label class="form-label" for="wayOfBehavior">Way Of Behavior<span id="swayOfBehavior" class="fs-3 text-danger ms-5">5</span></label>
+            <input type="range" class="form-range" value="5" min="1" max="10" id="wayOfBehavior" />
+        </div>
+        
+
+        <input type="submit" class="form-control btn btn-success" value="Add Comment"/>
+    </form>
+</div>
+
+@foreach (var comment in Model.Comments)
+{
+    <div class="row p-3 border rounded mb-3">
+        <div class="d-flex justify-content-between align-items-baseline border-bottom pb-2 mb-3">
+            <div><i class="fs-6 text-muted">@comment.UserName</i></div>
+
+            <div class="d-flex justify-content-start">
+
+                <div class="bg-light rounded text-black p-1 me-2">Stay in <i>@comment.DateOfStay.ToString("MMM yyyy")</i> <strong>@comment.RoomName</strong></div>
+                <div class="@SelectColorRate(comment.Rate) rounded text-white p-1">@comment.Rate</div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-items-baseline">
+            <i class="fa-solid fa-thumbs-up text-success fs-5 me-2"></i>
+            <p class="fs-6">@comment.Strength</p>
+        </div>
+
+        <div class="d-flex justify-content-start align-items-baseline">
+            <span><i class="fa-solid fa-thumbs-down text-danger fs-5 me-2"></i></span>
+            <p class="fs-6">@comment.WeakPoints</p>
+        </div>
+    </div>
+}
 
 @section Scripts{
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
 
         let mainImage = document.getElementById("mainImage");
+        let btnAddComment = document.getElementById("registerComment");
+        let form = document.getElementById("form")
+        let formDiv = document.getElementById("formDiv")
+        let hotelId = @Model.Id;
+
+        let strength = document.getElementById("strength");
+        let weakPoints = document.getElementById("weakPoints");
+
+        let quality = document.getElementById("quality");
+        let squality = document.getElementById("squality");
+
+        let cleaning = document.getElementById("cleaning");
+        let scleaning = document.getElementById("scleaning");
+
+        let swayOfBehavior = document.getElementById("swayOfBehavior");
+        let wayOfBehavior = document.getElementById("wayOfBehavior");
+
+        quality.addEventListener("change",(e) => {
+            squality.innerHTML = e.target.value
+        })
+
+        cleaning.addEventListener("change", (e) => {
+            scleaning.innerHTML = e.target.value
+        })
+
+        wayOfBehavior.addEventListener("change", (e) => {
+            swayOfBehavior.innerHTML = e.target.value
+        })
 
 
+        btnAddComment.addEventListener("click",(e) => {
+            if('@User.Identity.IsAuthenticated' == 'False'){
+                    swal({
+                        title:"you must login",
+                        text:"login",
+                        icon:"warning",
+                        buttons:["cancel","login"]
+                    }).then((d) => {
+                        if(d){
+                            window.location.href = "/account/login"
+                        }else{
+
+                        }
+                    });
+            }else{
+
+                formDiv.removeAttribute("class", "d-none");
+                formDiv.classList.add("border")
+                formDiv.classList.add("rounded")
+                formDiv.classList.add("row")
+                formDiv.classList.add("p-3")
+                formDiv.classList.add("mb-4")
+            }
+        })// end function
+
+        function SendComment(e){
+            e.preventDefault();
+            let avg =((Number( quality.value) + Number(cleaning.value) + Number(wayOfBehavior.value)) / 3).toFixed(2);
+           
+            let data = new FormData();
+            data.append("HotelId",hotelId);
+            data.append("AverageRateUser", avg);
+            data.append("Strength", strength.value);
+            data.append("WeakPoints", weakPoints.value);
+
+            $.ajax({
+                url:"/home/addComment",
+                data:data,
+                type:"POST",
+                contentType: false,
+                processData: false,
+                headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                success:() => {
+                    swal({
+                        title:"Send",
+                        text:"ok",
+                        icon:"success"
+                    }).then(() => {
+                        window.location.reload();
+                    })
+                },
+                error:() => {
+                    swal({
+                        title:"Fail",
+                        text:"Your comment not added!",
+                        icon:"warning"
+                    })// end swal
+                }
+            })// end ajax
+        }
         function ShowImage(e) {
             let tar = e.target
             let src = tar.getAttribute("src");
@@ -93,7 +247,6 @@
 
             mainImage.innerHTML = newImage;
         }
-
 
         function ChangeImage(e){
             

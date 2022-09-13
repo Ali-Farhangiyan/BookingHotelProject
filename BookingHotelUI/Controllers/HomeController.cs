@@ -1,7 +1,11 @@
-﻿using Application.Services.UserHotelServices.SearchHotelsByNameAndDate;
+﻿using Application.Services.CommentServices.AddComment;
+using Application.Services.CommentServices.CommentFacadeService;
+using Application.Services.UserHotelServices.SearchHotelsByNameAndDate;
 using Application.Services.UserHotelServices.UserFacadeHotelService;
 using BookingHotelUI.Models;
 using BookingHotelUI.Models.ViewModels;
+using Domain.Entites;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -11,11 +15,18 @@ namespace BookingHotelUI.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IUserHotelService userHotelService;
+        private readonly UserManager<User> userManager;
+        private readonly ICommentService commentService;
 
-        public HomeController(ILogger<HomeController> logger, IUserHotelService userHotelService)
+        public HomeController(ILogger<HomeController> logger,
+            IUserHotelService userHotelService, 
+            UserManager<User> userManager,
+            ICommentService commentService)
         {
             _logger = logger;
             this.userHotelService = userHotelService;
+            this.userManager = userManager;
+            this.commentService = commentService;
         }
 
         public IActionResult Index()
@@ -46,6 +57,25 @@ namespace BookingHotelUI.Controllers
             var model = new JsonResult(hotels);
             ;
             return model;
+        }
+
+        public async Task<StatusCodeResult> AddComment(AddCommentDto comment)
+        {
+            var userId = userManager.GetUserId(User);
+            comment.UserId = userId;
+            var userData = await userHotelService.GetUserData.ExecuteAsync(userId);
+            comment.UserName = userData.FullName;
+            var result = await commentService.AddComment.ExecuteAsync(comment);
+            if (result)
+            {
+                return StatusCode(200);
+
+            }
+            else
+            {
+                return StatusCode(400);
+
+            }
         }
 
         public IActionResult Privacy()

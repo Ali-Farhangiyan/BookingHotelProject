@@ -1,4 +1,5 @@
 using Application.ContextInterfaces;
+using Application.Services.CommentServices.CommentFacadeService;
 using Application.Services.PaymentServices.PaymentFacadeService;
 using Application.Services.UserHotelServices.UserFacadeHotelService;
 using Infrastructure.AddIdentityDatabaseToIservice;
@@ -16,6 +17,7 @@ builder.Services.AddMyIdentityService(builder.Configuration);
 builder.Services.AddTransient<IDatabaseContext, DatabaseContext>();
 builder.Services.AddTransient<IUserHotelService, UserHotelService>();
 builder.Services.AddTransient<IPaymentService, PaymentService>();
+builder.Services.AddTransient<ICommentService, CommentService>();
 
 var app = builder.Build();
 

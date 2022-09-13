@@ -1,5 +1,6 @@
 ﻿using Application.ContextInterfaces;
 using Application.Services.UserHotelServices.GetHotelsForSearchKey;
+using Application.Services.UserHotelServices.GetUserData;
 using Application.Services.UserHotelServices.OrderForBookingHotel;
 using Application.Services.UserHotelServices.SearchHotelsByNameAndDate;
 using Application.Services.UserHotelServices.ShowHotelWithRelatedDate;
@@ -19,15 +20,19 @@ namespace Application.Services.UserHotelServices.UserFacadeHotelService
         public IShowHotelWithRelatedDateService ShowRelatedHotel { get; }
 
         public IOrderForBookingHotelService OrderForBooking { get; }
+
+        public IGetUserDataService GetUserData { get; }
     }
 
     public class UserHotelService : IUserHotelService
     {
         private readonly IDatabaseContext db;
+        private readonly IIdentityDatabaseContext identityDb;
 
-        public UserHotelService(IDatabaseContext db)
+        public UserHotelService(IDatabaseContext db, IIdentityDatabaseContext identityDb)
         {
             this.db = db;
+            this.identityDb = identityDb;
         }
 
 
@@ -43,11 +48,16 @@ namespace Application.Services.UserHotelServices.UserFacadeHotelService
 
         private IShowHotelWithRelatedDateService showRelatedHotel;
         public IShowHotelWithRelatedDateService ShowRelatedHotel =>
-            showRelatedHotel ?? new ShowHotelWithRelatedDateService(db);
+            showRelatedHotel ?? new ShowHotelWithRelatedDateService(db, identityDb);
 
 
         private IOrderForBookingHotelService orderForBooking;
         public IOrderForBookingHotelService OrderForBooking =>
             orderForBooking ?? new OrderForBookingHotelService(db);
+
+
+        private IGetUserDataService getUserData;
+        public IGetUserDataService GetUserData =>
+            getUserData ?? new GetUserDataService(identityDb);
     }
 }

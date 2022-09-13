@@ -25,5 +25,6 @@ namespace Persistence.Contexts
         public DbSet<RoomBookingDate> RoomBookingDate { get; set; } = null!;
         public DbSet<City> Cities { get; set; } = null!;
         public DbSet<Payment> Payments { get; set; } = null!;
+        public DbSet<Comment> Comments { get; set; } = null!;
     }
 }
