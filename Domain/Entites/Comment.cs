@@ -23,7 +23,7 @@ namespace Domain.Entites
 
         public int HotelId { get; private set; }
 
-        public double AverageRateUser { get; private set; }
+        public double AverageRateUser { get; private set; } = 0;
 
         public StatusComment StatusComment { get; private set; } = StatusComment.Waiting;
         public Comment()

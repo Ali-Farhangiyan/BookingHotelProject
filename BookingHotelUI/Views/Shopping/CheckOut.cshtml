@@ -1,4 +1,5 @@
-﻿
+﻿@using Application.Services.UserHotelServices.GetUserData
+@model GetBookingDataDto;
 
 
 <h1>CheckOut Of Payment</h1>
@@ -8,6 +9,100 @@
 {
     <div class="bg-success text-white p-5 border-success rounded">
         <h3>@TempData["messageSuccess"].ToString()</h3>
+    </div>
+
+    <br /><br />
+
+    <div class="row text-center p-3 border rounded border-danger">
+        <h3>
+            you can login and on see your dashboard, see your bookings data<br>
+            as default your username is natinal cade, and password is phone number
+        </h3>
+    </div>
+
+    <br />
+    <div class="row">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h3 class="card-header">Your Information about your booking</h3>
+            </div>
+
+            <div class="card-body p-3">
+
+                <!-- first row -->
+                <div class="d-flex justify-content-around align-items-baseline mb-3">
+                    <div>
+                        <h3>Name: </h3>
+                        <p>@Model.PassengerName</p>
+                    </div>
+
+                    <div>
+                        <h3>Family: </h3>
+                        <p>@Model.PassengerFamilyName</p>
+                    </div>
+                </div>
+
+
+                <!-- second row -->
+                <div class="d-flex justify-content-around align-items-baseline mb-3">
+                    <div>
+                        <h3>Start Date: </h3>
+                        <p>@Model.StartDate.ToShortDateString()</p>
+                    </div>
+
+                    <div>
+                        <h3>End Date: </h3>
+                        <p>@Model.EndDate.ToShortDateString()</p>
+                    </div>
+                </div>
+
+                <!-- third row -->
+                <div class="d-flex justify-content-around align-items-baseline mb-3">
+                    <div>
+                        <h3>BookingId: </h3>
+                        <p>@Model.BookingCode</p>
+                    </div>
+
+                    <div>
+                        <h3>Status: </h3>
+                        <p>@Model.BookingStatus</p>
+                    </div>
+                </div>
+
+                <!-- fouth row-->
+                <div class="d-flex justify-content-around align-items-baseline mb-3">
+                    <div>
+                        <h3>Hotel: </h3>
+                        <p>@Model.HotelName</p>
+                    </div>
+
+                    <div>
+                        <h3>Room: </h3>
+                        <p>@Model.RoomName</p>
+                    </div>
+                </div>
+
+                <!-- fifth row -->
+                <div class="d-flex justify-content-around align-items-baseline mb-3">
+                    <div>
+                        <h3>Length: </h3>
+                        <p>@Model.LengthOfStay</p>
+                    </div>
+
+                    <div>
+                        <h3>Total Price </h3>
+                        <p>@Model.TotalPrice.ToString("C")</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="card-footer bg-white">
+                <div>
+                    <button class="btn btn-success" onclick="window.print()">Print</button>
+                </div>
+            </div>
+        </div>
     </div>
 }
 

@@ -1,10 +1,31 @@
 ﻿@page
 @model Admin.Pages.Comment.IndexModel
 @{
+    var pageIndex = Request.Query["pageIndex"];
+    var SortComments = Request.Query["SortComments"];
 }
 
 <h1>Show Comments </h1>
-<hr /><br />
+
+
+<hr />
+<br />
+<div class="d-flex justify-content-between">
+    <div class="dropdown">
+        <button aria-expanded="false" class="dropdown-toggle btn btn-outline-dark" data-bs-toggle="dropdown">Sorting Hotels </button>
+
+        <div class="dropdown-menu dropdown-menu-dark">
+            <a asp-page="Index" asp-route-SortComments="1" class="dropdown-item">Oldest</a>
+            <a asp-page="Index" asp-route-SortComments="2" class="dropdown-item">Newest</a>
+            <a asp-page="Index" asp-route-SortComments="3" class="dropdown-item">Waitig</a>
+            <a asp-page="Index" asp-route-SortComments="4" class="dropdown-item">Accepted</a>
+            <a asp-page="Index" asp-route-SortComments="5" class="dropdown-item">Rejected</a>
+        </div>
+    </div>
+
+   
+</div>
+<br />
 
 <table class="table table-striped table-hover">
     <thead>
@@ -40,3 +61,45 @@
         }
     </tbody>
 </table>
+
+
+@{
+    var next = Model.Comments.PageIndex + 1;
+    var prev = Model.Comments.PageIndex - 1;
+
+    var hasNext = Model.Comments.HasNextPage ? "" : "disabled";
+    var hasPrev = Model.Comments.HasPrevPage ? "" : "disabled";
+}
+<nav aria-label="..." class="d-flex justify-content-center">
+
+    <ul class="pagination">
+        <li class="page-item @hasPrev">
+            <a class="page-link" asp-page="Index"
+               asp-route-SortComments="@SortComments" asp-route-pageIndex="@prev">Prev</a>
+        </li>
+
+        @for (var i = 1; i <= @Model.Comments.TotalPage + 1; i++)
+        {
+            if (@Model.Comments.PageIndex == @i)
+            {
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" asp-page="Index"
+               asp-route-SortComments="@SortComments" asp-route-pageIndex="@i">@i</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-page="Index"
+               asp-route-SortComments="@SortComments" asp-route-pageIndex="@i">@i</a>
+                </li>
+            }
+        }
+
+        <li class="page-item @hasNext">
+            <a class="page-link" asp-page="Index"
+               asp-route-SortComments="@SortComments" asp-route-pageIndex="@next">Next</a>
+        </li>
+
+    </ul>
+</nav>

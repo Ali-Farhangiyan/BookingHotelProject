@@ -29,9 +29,15 @@ namespace BookingHotelUI.Controllers
             this.commentService = commentService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var model = new HomeViewModel
+            {
+                PopularHotels = await userHotelService.PopularHotels.ExecuteAsync()
+            };
+
+
+            return View(model);
         }
 
         [HttpPost]
@@ -76,6 +82,12 @@ namespace BookingHotelUI.Controllers
                 return StatusCode(400);
 
             }
+        }
+
+        public async Task<IActionResult> Track(int? bookingId)
+        {
+            var model = await userHotelService.TrackOrder.TrackOrderAsync(bookingId);
+            return View(model);
         }
 
         public IActionResult Privacy()

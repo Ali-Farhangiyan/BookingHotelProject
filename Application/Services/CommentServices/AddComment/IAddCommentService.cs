@@ -29,7 +29,14 @@ namespace Application.Services.CommentServices.AddComment
             var newComment = new Comment(comment.HotelId, comment.UserId, comment.Strength, comment.WeakPoints, comment.UserName, comment.AverageRateUser);
 
             await db.Comments.AddAsync(newComment);
-            var rateAverage = await db.Comments.Include(c => c.Hotel).Where(c => c.HotelId == comment.HotelId).AverageAsync(c => c.AverageRateUser);
+            await db.SaveChangesAsync();
+
+
+            var rateAverage = await db.Comments
+                .Include(c => c.Hotel)
+                .Where(c => c.HotelId == comment.HotelId)
+                .AverageAsync(c => c.AverageRateUser);
+
             var hotel = await db.Hotels.FirstOrDefaultAsync(c => c.Id == comment.HotelId);
 
             hotel.SetRate(rateAverage);

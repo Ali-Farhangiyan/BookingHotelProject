@@ -4,6 +4,8 @@ using Application.Services.UserHotelServices.GetUserData;
 using Application.Services.UserHotelServices.OrderForBookingHotel;
 using Application.Services.UserHotelServices.SearchHotelsByNameAndDate;
 using Application.Services.UserHotelServices.ShowHotelWithRelatedDate;
+using Application.Services.UserHotelServices.ShowPopularHotels;
+using Application.Services.UserHotelServices.TrackOrder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +24,10 @@ namespace Application.Services.UserHotelServices.UserFacadeHotelService
         public IOrderForBookingHotelService OrderForBooking { get; }
 
         public IGetUserDataService GetUserData { get; }
+
+        public ITrackOrderService TrackOrder { get; }
+
+        public IShowPopularHotelService PopularHotels { get; }
     }
 
     public class UserHotelService : IUserHotelService
@@ -58,6 +64,16 @@ namespace Application.Services.UserHotelServices.UserFacadeHotelService
 
         private IGetUserDataService getUserData;
         public IGetUserDataService GetUserData =>
-            getUserData ?? new GetUserDataService(identityDb);
+            getUserData ?? new GetUserDataService(identityDb,db);
+
+
+        private ITrackOrderService trackOrder;
+        public ITrackOrderService TrackOrder =>
+            trackOrder ?? new TrackOrderService(db);
+
+
+        private IShowPopularHotelService popularHotels;
+        public IShowPopularHotelService PopularHotels =>
+            popularHotels ?? new ShowPopularHotelService(db);
     }
 }

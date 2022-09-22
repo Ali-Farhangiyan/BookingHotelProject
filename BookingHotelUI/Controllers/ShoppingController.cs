@@ -74,14 +74,26 @@ namespace BookingHotelUI.Controllers
 
             if(userFind is null)
             {
-                return RedirectToAction("Register", "Account", new
+                //return RedirectToAction("Register", "Account", new
+                //{
+                //    FirstName = register.FirstName,
+                //    LastName = register.LastName,
+                //    NationalCode = register.NationalCode,
+                //    PhoneNumber = register.PhoneNumber,
+                //    Email = register.Email
+                //});
+
+                var newUser = new User
                 {
                     FirstName = register.FirstName,
                     LastName = register.LastName,
-                    NationalCode = register.NationalCode,
+                    Email = register.Email,
                     PhoneNumber = register.PhoneNumber,
-                    Email = register.Email
-                });
+                    UserName = register.NationalCode,
+                    NationalCode = register.NationalCode,
+                };
+
+                var result = await userManager.CreateAsync(newUser, register.PhoneNumber);
             }
 
             var ss = new BookingRegisterViewModel
@@ -108,21 +120,29 @@ namespace BookingHotelUI.Controllers
         public async Task<IActionResult> PayAction(OrderDto data)
         {
             
-            var userId = userManager.GetUserId(User);
-            data.UserId = userId;
+            var user = await userManager.FindByEmailAsync(data.UserEmail);
+            data.UserId = user.Id;
+
             var bookingId = await userHotelService.OrderForBooking.ExecuteAsync(data);
             TempData["RoomIdForRoomBooking"] = data.RoomId;
             // register payment
             var payment = await paymentService.PayForBooking(bookingId);
 
             // send to payment gate
-            return RedirectToAction("Index", "Pay", new { PaymentId = payment.PaymentId });
+            return RedirectToAction("Index", "Pay", new { PaymentId = payment.PaymentId, UserIdd = user.Id });
             return View();
         }
 
-        public IActionResult CheckOut()
+        public async Task<IActionResult> CheckOut(string? userId)
         {
+            if(userId is not null)
+            {
+                var model = await userHotelService.GetUserData.ShowResultAfterPay(userId);
+                return View(model);
+            }
+
             return View();
+            
         }
     }
 }

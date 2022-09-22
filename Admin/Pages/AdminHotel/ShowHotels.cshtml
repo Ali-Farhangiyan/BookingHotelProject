@@ -1,6 +1,8 @@
 ﻿@page "/"
 @model Admin.Pages.AdminHotel.ShowHotelsModel
 @{
+    var pageIndex = Request.Query["pageIndex"];
+    var AdminSortingHotel = Request.Query["AdminSortingHotel"];
 }
 
 <h1>Show Hotels</h1>
@@ -11,10 +13,10 @@
         <button aria-expanded="false" class="dropdown-toggle btn btn-outline-dark" data-bs-toggle="dropdown">Sorting Hotels </button>
 
         <div class="dropdown-menu dropdown-menu-dark">
-            <a asp-page="ShowHotels" asp-route-AdminSortingHotel="1" class="dropdown-item">Newest</a>
-            <a asp-page="ShowHotels" asp-route-AdminSortingHotel="2" class="dropdown-item">Oldest</a>
-            <a asp-page="ShowHotels" asp-route-AdminSortingHotel="3" class="dropdown-item">Most Star</a>
-            <a asp-page="ShowHotels" asp-route-AdminSortingHotel="4" class="dropdown-item">Min Star</a>
+            <a asp-page="ShowHotels"  asp-route-AdminSortingHotel="1" class="dropdown-item">Newest</a>
+            <a asp-page="ShowHotels"  asp-route-AdminSortingHotel="2" class="dropdown-item">Oldest</a>
+            <a asp-page="ShowHotels"  asp-route-AdminSortingHotel="3" class="dropdown-item">Most Star</a>
+            <a asp-page="ShowHotels"  asp-route-AdminSortingHotel="4" class="dropdown-item">Min Star</a>
         </div>
     </div>
 
@@ -61,23 +63,29 @@
 
   <ul class="pagination">
     <li class="page-item @hasPrev">
-      <a class="page-link" asp-page="ShowHotels" asp-route-pageIndex="@prev">Prev</a>
+      <a class="page-link" asp-page="ShowHotels"
+               asp-route-AdminSortingHotel="@AdminSortingHotel" asp-route-pageIndex="@prev">Prev</a>
     </li>
 
-    @for (var i = 1; i <= @Model.ShowHotel.TotalPage; i++)
+    @for (var i = 1; i <= @Model.ShowHotel.TotalPage + 1; i++)
     {
         if(@Model.ShowHotel.PageIndex == @i)
         {
-           <li class="page-item active" aria-current="page"><a class="page-link" asp-page="ShowHotels" asp-route-pageIndex="@i">@i</a></li>
+           <li class="page-item active" aria-current="page"><a class="page-link" asp-page="ShowHotels"
+               asp-route-AdminSortingHotel="@AdminSortingHotel" asp-route-pageIndex="@i">@i</a>
+                </li>
         }
         else
         {
-           <li class="page-item"><a class="page-link" asp-page="ShowHotels" asp-route-pageIndex="@i">@i</a></li>
+           <li class="page-item"><a class="page-link" asp-page="ShowHotels"
+               asp-route-AdminSortingHotel="@AdminSortingHotel" asp-route-pageIndex="@i">@i</a>
+                </li>
         }
     }
 
     <li class="page-item @hasNext">
-      <a class="page-link" asp-page="ShowHotels" asp-route-pageIndex="@next">Next</a>
+      <a class="page-link" asp-page="ShowHotels"
+               asp-route-AdminSortingHotel="@AdminSortingHotel" asp-route-pageIndex="@next">Next</a>
     </li>
 
   </ul>

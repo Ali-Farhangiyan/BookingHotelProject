@@ -34,12 +34,20 @@ namespace BookingHotelUI.Controllers
         }
 
 
-        public async Task<IActionResult> Index(Guid paymentId)
+        public async Task<IActionResult> Index(Guid paymentId, string UserIdd)
         {
             var payment = await paymentService.GetPaymentAsync(paymentId);
             if (payment is null) return NotFound();
-
-            var userId = userManager.GetUserId(User);
+            string userId;
+            if (User.Identity.IsAuthenticated)
+            {
+                userId = userManager.GetUserId(User);
+            }
+            else
+            {
+                userId = UserIdd;
+            }
+            
             if (userId != payment.UserId) return BadRequest();
 
             var callBackUrl = Url.Action(nameof(Verify), "Pay", new { payment.Id }, protocol: Request.Scheme);
@@ -85,7 +93,7 @@ namespace BookingHotelUI.Controllers
                     if (verifyResult == true)
                     {
                         TempData["messageSuccess"] = "Payment is done!";
-                        return RedirectToAction("CheckOut", "Shopping");
+                        return RedirectToAction("CheckOut", "Shopping",new {UserId = payment.UserId});
                     }
                     else
                     {

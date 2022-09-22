@@ -38,6 +38,7 @@ namespace BookingHotelUI.Controllers
                 PhoneNumber = register.PhoneNumber,
                 UserName = register.NationalCode,
                 NationalCode = register.NationalCode,
+                
             };
 
             var result = await userManager.CreateAsync(user, register.PhoneNumber);

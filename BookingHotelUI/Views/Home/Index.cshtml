@@ -1,9 +1,49 @@
 ﻿
-@model SearchViewModel;
+@model HomeViewModel;
 
 @{
     ViewData["Title"] = "Home Page";
+
+    string GetColorRate(double rate){
+        if(rate >= 7){
+            return "success";
+        }else if( rate < 7 && rate >= 5){
+            return "warning";
+        }else{
+            return "danger";
+        }
+    }
 }
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#trackOrderModal">
+    Track Order
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="trackOrderModal" tabindex="-1" aria-labelledby="trackOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="trackOrderModalLabel">Track Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Track" method="get">
+                    <label class="form-label" >Booking Id</label>
+                    <input class="form-control" name="bookingId" type="number" />
+
+                    <input type="submit" value="Search" class="btn btn-success" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <section class="my-3 p-4 border rounded">
     <form asp-action="SearchForm" method="post" >
@@ -11,16 +51,16 @@
         <div class="row  ">
             <h3>Searh Hotels</h3>
             <hr />
-            <label class="form-label" asp-for="City"></label>
+            <label class="form-label" asp-for="Search.City"></label>
             <select class="form-select" id="city" name="cityId" placeholder="city,hotel name..." type="text"></select>
             
             <div class="col-sm-6">
-                <label class="form-label" asp-for="StartDate"></label>
-                <input class="form-control" asp-for="StartDate" id="startDate" type="date" />
+                <label class="form-label" asp-for="Search.StartDate"></label>
+                <input class="form-control" asp-for="Search.StartDate" id="startDate" type="date" />
             </div>
             <div class="col-sm-6">
-                <label class="form-label" asp-for="EndDate"></label>
-                <input class="form-control" asp-for="EndDate" id="endDate" type="date" />
+                <label class="form-label" asp-for="Search.EndDate"></label>
+                <input class="form-control" asp-for="Search.EndDate" id="endDate" type="date" />
             </div>
             
         </div>
@@ -35,9 +75,66 @@
 
 
 
+
+
+<div class="swiper mySwiper ">
+    <div class="swiper-wrapper">
+        @foreach (var item in Model.PopularHotels)
+        {
+            <div class="swiper-slide" >
+
+                <div class="card">
+                    <img class="card-img-top" src="@item.Image">
+
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        <p class="card-subtitle text-muted">@item.City</p>
+                        
+                        <p>
+                            @for (var i = 0; i < item.NumberOfStar; i++)
+                            {
+                                <i class="fa-solid fa-star text-warning"></i>
+                            }
+                        </p>
+
+                        <h5 class="btn btn-@GetColorRate(item.Rate)">@item.Rate</h5>
+
+
+                    </div>
+                </div>
+
+            </div>
+        }
+        
+    </div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-pagination"></div>
+</div>
+
 @section Scripts{
     
     <script src="~/lib/select2/js/select2.full.min.js"></script>
+
+    <script>
+        var swiper = new Swiper(".mySwiper", {
+            slidesPerView: 3,
+            spaceBetween: 30,
+            slidesPerGroup: 3,
+            loop: true,
+            loopFillGroupWithBlank: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        });
+    </script>
+
+
     <script>
         var startDate = document.getElementById("startDate");
         var endDate = document.getElementById("endDate");
@@ -69,6 +166,17 @@
                 },// processResults
             }
         });
+        
+        
+
+        startDate.addEventListener("click", (e) => {
+            var date = new Date();
+            let nowDate = date.toISOString().split('T')[0]
+            startDate.setAttribute("min", nowDate)
+            console.log(date)
+        })
+
+        
 
         startDate.addEventListener("change",(e) => {
 
